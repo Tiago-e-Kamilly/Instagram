@@ -1,11 +1,13 @@
+/* RESET GERAL */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* BODY */
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: #f8f8f8;
   overflow-x: hidden;
 }
@@ -13,10 +15,12 @@ body {
 /* HEADER */
 header {
   width: 100%;
-  height: 60vh;
+  height: 70vh;
   background: url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,14 +29,35 @@ header {
   text-align: center;
 }
 
+header h1 {
+  font-size: 40px;
+}
+
+.data {
+  font-size: 20px;
+}
+
+/* SEÇÕES */
+section {
+  width: 100%;
+  padding: 10px;
+}
+
 /* CARDS */
 .card {
   width: 95%;
   max-width: 800px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 25px;
+  border-radius: 15px;
   background: white;
-  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+h2 {
+  color: #c9184a;
+  margin-bottom: 10px;
 }
 
 /* GALERIA */
@@ -46,19 +71,24 @@ header {
   width: 100%;
   height: 150px;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 /* PRESENTES */
 .presentes {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
+  gap: 15px;
 }
 
 .card-presente {
   width: 100%;
   max-width: 220px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
 .card-presente img {
@@ -67,34 +97,64 @@ header {
   object-fit: cover;
 }
 
-/* MAPA */
-.mapa {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 10px;
+.card-presente h3 {
+  padding: 10px;
 }
 
-.mapa iframe {
-  width: 100% !important;
-  height: 300px !important;
-  border: none;
-}
-
-/* BOTÃO WHATSAPP */
-.whatsapp {
+.card-presente a {
   display: block;
-  padding: 15px;
-  background: #25D366;
+  margin: 10px;
+  padding: 10px;
+  background: #c9184a;
   color: white;
   text-decoration: none;
-  text-align: center;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 
-/* RESPONSIVO */
+.card-presente button {
+  margin: 10px;
+  padding: 10px;
+  border: none;
+  background: #28a745;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* PIX */
+.pix {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+/* IMAGENS (CORREÇÃO GLOBAL) */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* RESPONSIVO (CELULAR) */
 @media (max-width: 768px) {
+
+  header {
+    height: 60vh;
+    padding: 20px;
+  }
+
+  header h1 {
+    font-size: 26px;
+  }
+
+  .data {
+    font-size: 16px;
+  }
+
+  .card {
+    width: 92%;
+    padding: 20px;
+  }
+
   .presentes {
     flex-direction: column;
     align-items: center;
@@ -104,7 +164,30 @@ header {
     max-width: 100%;
   }
 
+  .card-presente img {
+    height: 180px;
+  }
+
+  a, button {
+    width: 100%;
+  }
+
+}
+.mapa {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.mapa iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+}
+@media (max-width: 768px) {
   .mapa iframe {
-    height: 250px !important;
+    height: 250px;
   }
 }
