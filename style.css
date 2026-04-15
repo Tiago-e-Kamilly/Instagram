@@ -1,168 +1,119 @@
+/* RESET GERAL */
 * {
-  box-sizing: border-box;
-}
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background: #fafafa;
-  text-align: center;
-  color: #333;
-}
-body {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f8f8;
   overflow-x: hidden;
 }
 
-/* HEADER PREMIUM */
+/* HEADER */
 header {
-  height: 100vh;
+  width: 100%;
+  height: 70vh;
   background: url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486');
   background-size: cover;
   background-position: center;
-  position: relative;
-}
+  background-repeat: no-repeat;
 
-.overlay {
-  background: rgba(0,0,0,0.4);
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   color: white;
+  text-align: center;
 }
 
 header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 50px;
-  margin: 0;
+  font-size: 40px;
 }
 
 .data {
   font-size: 20px;
-  margin-top: 10px;
+}
+
+/* SEÇÕES */
+section {
+  width: 100%;
+  padding: 10px;
 }
 
 /* CARDS */
 .card {
-  width: 100%;
+  width: 95%;
   max-width: 800px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 25px;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-.destaque {
-  background: #fff5f7;
-}
-
-/* TÍTULOS */
 h2 {
-  font-family: 'Playfair Display', serif;
   color: #c9184a;
+  margin-bottom: 10px;
 }
 
 /* GALERIA */
 .galeria {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
 }
 
 .galeria img {
-  width: 220px;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   border-radius: 10px;
-  transition: 0.3s;
-}
-
-.galeria img:hover {
-  transform: scale(1.05);
 }
 
 /* PRESENTES */
 .presentes {
   display: flex;
-  justify-content: center;
-  gap: 20px;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
 }
 
 .card-presente {
-  width: 200px;
+  width: 100%;
+  max-width: 220px;
   background: white;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
 .card-presente img {
   width: 100%;
+  height: 150px;
+  object-fit: cover;
 }
 
 .card-presente h3 {
-  margin: 10px;
+  padding: 10px;
 }
 
 .card-presente a {
   display: block;
   margin: 10px;
-  padding: 8px;
+  padding: 10px;
   background: #c9184a;
   color: white;
   text-decoration: none;
   border-radius: 5px;
 }
 
-/* PIX */
-.pix {
-  margin-top: 20px;
-  font-size: 18px;
-}
-
-/* FOOTER */
-footer {
-  margin: 40px;
-  color: #777;
-}
-
-/* RESPONSIVO */
-@media (max-width: 768px) {
-  .card {
-    width: 95%;
-  }
-
-  header h1 {
-    font-size: 32px;
-  }
-
-  .galeria img {
-    width: 100%;
-  }
-}
-.botao-whatsapp {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 12px 20px;
-  background: #25D366;
-  color: white;
-  font-size: 18px;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.botao-whatsapp:hover {
-  background: #1ebe5d;
-}
-.categoria {
-  margin-top: 30px;
-  color: #c9184a;
-  font-family: 'Playfair Display', serif;
-}
-
 .card-presente button {
   margin: 10px;
-  padding: 8px;
+  padding: 10px;
   border: none;
   background: #28a745;
   color: white;
@@ -170,59 +121,22 @@ footer {
   cursor: pointer;
 }
 
-.card-presente button:hover {
-  background: #218838;
+/* PIX */
+.pix {
+  margin-top: 20px;
+  font-size: 16px;
 }
-.card-presente p {
-  margin: 5px 0;
-  font-weight: bold;
-  color: #c9184a;
+
+/* IMAGENS (CORREÇÃO GLOBAL) */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
+
+/* RESPONSIVO (CELULAR) */
 @media (max-width: 768px) {
 
-  header {
-    height: 70vh;
-    padding: 20px;
-  }
-
-  header h1 {
-    font-size: 28px;
-  }
-
-  .data {
-    font-size: 16px;
-  }
-
-  .card {
-    width: 95%;
-    padding: 20px;
-  }
-
-  /* GALERIA */
-  .galeria img {
-    width: 100%;
-  }
-
-  /* PRESENTES */
-  .presentes {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card-presente {
-    width: 90%;
-  }
-
-  /* BOTÕES */
-  a, button {
-    font-size: 16px;
-    padding: 12px;
-  }
-
-}
-@media (max-width: 768px) {
-
-  /* HEADER */
   header {
     height: 60vh;
     padding: 20px;
@@ -230,84 +144,16 @@ footer {
 
   header h1 {
     font-size: 26px;
-    line-height: 1.2;
   }
 
   .data {
-    font-size: 14px;
+    font-size: 16px;
   }
 
-  /* CARDS */
   .card {
     width: 92%;
-    margin: 15px auto;
-    padding: 18px;
+    padding: 20px;
   }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  /* GALERIA - AGORA FICA BONITO */
-  .galeria {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .galeria img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-  }
-
-  /* PRESENTES - ORGANIZA EM LISTA */
-  .presentes {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .card-presente {
-    width: 100%;
-  }
-
-  .card-presente img {
-    height: 180px;
-  }
-
-  /* BOTÕES GRANDES (melhor UX) */
-  a, button {
-    width: 100%;
-    display: block;
-    font-size: 16px;
-    padding: 12px;
-    margin-top: 8px;
-  }
-
-  /* TEXTO */
-  p {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-}
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-.presentes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card-presente {
-  width: 100%;
-  max-width: 250px;
-}
-@media (max-width: 768px) {
 
   .presentes {
     flex-direction: column;
@@ -316,6 +162,14 @@ img {
 
   .card-presente {
     max-width: 100%;
+  }
+
+  .card-presente img {
+    height: 180px;
+  }
+
+  a, button {
+    width: 100%;
   }
 
 }
