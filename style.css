@@ -167,3 +167,122 @@ footer {
 .card-presente button:hover {
   background: #218838;
 }
+.card-presente p {
+  margin: 5px 0;
+  font-weight: bold;
+  color: #c9184a;
+}
+@media (max-width: 768px) {
+
+  header {
+    height: 70vh;
+    padding: 20px;
+  }
+
+  header h1 {
+    font-size: 28px;
+  }
+
+  .data {
+    font-size: 16px;
+  }
+
+  .card {
+    width: 95%;
+    padding: 20px;
+  }
+
+  /* GALERIA */
+  .galeria img {
+    width: 100%;
+  }
+
+  /* PRESENTES */
+  .presentes {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-presente {
+    width: 90%;
+  }
+
+  /* BOTÕES */
+  a, button {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  /* HEADER */
+  header {
+    height: 60vh;
+    padding: 20px;
+  }
+
+  header h1 {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .data {
+    font-size: 14px;
+  }
+
+  /* CARDS */
+  .card {
+    width: 92%;
+    margin: 15px auto;
+    padding: 18px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  /* GALERIA - AGORA FICA BONITO */
+  .galeria {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .galeria img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  /* PRESENTES - ORGANIZA EM LISTA */
+  .presentes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .card-presente {
+    width: 100%;
+  }
+
+  .card-presente img {
+    height: 180px;
+  }
+
+  /* BOTÕES GRANDES (melhor UX) */
+  a, button {
+    width: 100%;
+    display: block;
+    font-size: 16px;
+    padding: 12px;
+    margin-top: 8px;
+  }
+
+  /* TEXTO */
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+}
