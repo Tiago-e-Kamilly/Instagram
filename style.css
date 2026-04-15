@@ -1,154 +1,171 @@
-/* BASE */
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: #fdfaf7;
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Tiago & Kamilly 💍</title>
 
-/* HEADER COM OVERLAY */
-header {
-  position: relative;
-  height: 70vh;
-  background: url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486');
-  background-size: cover;
-  background-position: center;
-}
+  <link rel="stylesheet" href="style.css">
 
-header::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  top: 0;
-  left: 0;
-}
+  <!-- Fontes elegantes -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+</head>
 
-header h1 {
-  position: relative;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 55px;
-  letter-spacing: 2px;
-  z-index: 1;
-}
+<body>
 
-.data {
-  position: relative;
-  z-index: 1;
-  font-size: 20px;
-}
+<header>
+  <div class="overlay">
+    <h1>Tiago & Kamilly</h1>
+    <p class="data">20 de novembro de 2027</p>
+  </div>
+</header>
 
-/* TÍTULOS */
-h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  color: #8B0000;
-}
+<section class="card">
+  <h2>⏳ Contagem Regressiva</h2>
+  <h3 id="contador"></h3>
+</section>
 
-/* CARDS PREMIUM */
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  transition: transform 0.3s;
-}
+<section class="card destaque">
+  <h2>❤️ Nossa História</h2>
+  <p>
+    Tudo começou quando nossos caminhos se cruzaram...
+    Desde então, cada momento juntos nos trouxe até aqui.
+  </p>
+</section>
 
-.card:hover {
-  transform: translateY(-5px);
-}
+<section class="card">
+  <h2>📸 Nossos Momentos</h2>
+  <div class="galeria">
+    <img src="foto1.jpg">
+    <img src="foto2.jpg">
+    <img src="foto3.jpg">
+  </div>
+</section>
 
-/* BOTÕES */
-a, button {
-  background: linear-gradient(135deg, #c9184a, #8B0000);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  padding: 12px;
-  transition: 0.3s;
-}
+<section class="card">
+  <h2>📍 Local</h2>
+  <p>Primeira igreja batista - Itaperuna</p>
 
-a:hover, button:hover {
-  transform: scale(1.05);
-}
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.6824399777406!2d-41.893627925597976!3d-21.20477047926627!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xbc606580805313%3A0xa733cc16b2d19622!2sPRIMEIRA%20IGREJA%20BATISTA%20DE%20ITAPERUNA!5e0!3m2!1spt-BR!2sbr!4v1776209723034!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    width="100%" 
+    height="300"
+    style="border:0; border-radius:10px;">
+  </iframe>
+</section>
+<section class="card">
+  <h2>✅ Confirme sua presença</h2>
 
-/* PRESENTES */
-.card-presente {
-  border-radius: 15px;
-  overflow: hidden;
-  transition: 0.3s;
-}
+  <p>Clique no botão abaixo para confirmar via WhatsApp:</p>
 
-.card-presente:hover {
-  transform: scale(1.05);
-}
-.card-presente img {
-  width: 100%;
-  height: 160px;        /* tamanho padrão */
-  object-fit: cover;    /* corta sem deformar */
-  border-radius: 10px 10px 0 0;
-}
+  <a 
+    href="https://wa.me/22988214942?text=Olá,%20confirmo%20minha%20presença%20no%20casamento%20💍"
+    target="_blank"
+    class="botao-whatsapp">
+    
+    Confirmar Presença
+  </a>
+</section>
+<section class="card">
+  <h2>🎁 Lista de Presentes</h2>
 
-/* GALERIA */
-.galeria img {
-  border-radius: 10px;
-  transition: 0.3s;
-}
+  <!-- CATEGORIA -->
+  <h3 class="categoria">🍳 Cozinha</h3>
+  <div class="presentes">
 
-.galeria img:hover {
-  transform: scale(1.05);
-}
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/61LtuGzXeaL._AC_SL1500_.jpg">
+      <h4>Air Fryer</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
 
-/* MAPA */
-.mapa iframe {
-  border-radius: 15px;
-}
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/71K0y7qT7XL._AC_SL1500_.jpg">
+      <h4>Cafeteira</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
 
-/* WHATSAPP */
-.whatsapp {
-  background: #25D366;
-  border-radius: 30px;
-}
-.card {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: aparecer 1s ease forwards;
-}
+  </div>
 
-@keyframes aparecer {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-h2::after {
-  content: "";
-  display: block;
-  width: 50px;
-  height: 2px;
-  background: #c9184a;
-  margin: 10px auto;
-}
-@media (max-width: 768px) {
+  <!-- CATEGORIA -->
+  <h3 class="categoria">🍽️ Utensílios</h3>
+  <div class="presentes">
 
-  .card-presente {
-    width: 100%;
-    max-width: 100%;
-  }
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/71rIkvWv6bL._AC_SL1500_.jpg">
+      <h4>Jogo de Panelas</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
 
-  .card-presente img {
-    height: 140px;   /* menor no celular */
-  }
+  </div>
 
-}
-.card-presente {
-  overflow: hidden;
-}
+  <!-- CATEGORIA -->
+  <h3 class="categoria">🏠 Casa</h3>
+  <div class="presentes">
 
-.card-presente img {
-  transition: 0.3s;
-}
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/71j8d5FZxGL._AC_SL1500_.jpg">
+      <h4>Jogo de Cama</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
+<section class="card">
+  <h2>✈️ Lua de Mel</h2>
+  <p>Nos ajude a viver momentos inesquecíveis 💕</p>
 
-.card-presente:hover img {
-  transform: scale(1.05);
-}
+  <div class="presentes">
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
+      <h3>🏨 Noite de Hotel</h3>
+      <p>R$ 150</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98">
+      <h3>🍽️ Jantar Romântico</h3>
+      <p>R$ 100</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+      <h3>🏝️ Passeio Especial</h3>
+      <p>R$ 200</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
+      <h3>✈️ Passagem Aérea</h3>
+      <p>R$ 300</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+  </div>
+
+  <p class="pix">
+    💰 Ou contribua diretamente via PIX:<br>
+    <strong>tiago123</strong>
+  </p>
+</section>
+  
+</section>
+
+
+<footer>
+  <p>Com amor, esperamos você 💕</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
