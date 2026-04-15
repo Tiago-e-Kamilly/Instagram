@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <title>Tiago & Kamilly 💍</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
+
+  <!-- Fontes elegantes -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Montserrat:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <header>
-  <h1>Tiago & [Nome]</h1>
-  <p class="data">20 de novembro de 2027</p>
+  <div class="overlay">
+    <h1>Tiago & Kamilly</h1>
+    <p class="data">20 de novembro de 2027</p>
+  </div>
 </header>
 
 <section class="card">
@@ -21,9 +25,12 @@
   <h3 id="contador"></h3>
 </section>
 
-<section class="card">
+<section class="card destaque">
   <h2>❤️ Nossa História</h2>
-  <p>Conte aqui a história de vocês...</p>
+  <p>
+    Tudo começou quando nossos caminhos se cruzaram...
+    Desde então, cada momento juntos nos trouxe até aqui.
+  </p>
 </section>
 
 <section class="card">
@@ -37,55 +44,127 @@
 
 <section class="card">
   <h2>📍 Local</h2>
+  <p>Primeira igreja batista - Itaperuna</p>
 
   <div class="mapa">
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.6824399777406!2d-41.893627925597976!3d-21.20477047926627!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xbc606580805313%3A0xa733cc16b2d19622!2sPRIMEIRA%20IGREJA%20BATISTA%20DE%20ITAPERUNA!5e0!3m2!1spt-BR!2sbr!4v1776209723034!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-      loading="lazy">
-    </iframe>
-  </div>
-
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.6824399777406!2d-41.893627925597976!3d-21.20477047926627!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xbc606580805313%3A0xa733cc16b2d19622!2sPRIMEIRA%20IGREJA%20BATISTA%20DE%20ITAPERUNA!5e0!3m2!1spt-BR!2sbr!4v1776209723034!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen="" 
+    loading="lazy">
+  </iframe>
+</div>
 </section>
-
-<section class="card">
-  <h2>🎁 Lista de Presentes</h2>
-
-  <div class="presentes">
-    <div class="card-presente">
-      <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c">
-      <h3>Air Fryer</h3>
-      <a href="#">Comprar</a>
-    </div>
-
-    <div class="card-presente">
-      <img src="https://images.unsplash.com/photo-1574263867128-9eab8d4e5b4d">
-      <h3>Cafeteira</h3>
-      <a href="#">Comprar</a>
-    </div>
-  </div>
-</section>
-
-<section class="card">
-  <h2>✈️ Lua de Mel</h2>
-
-  <div class="presentes">
-    <div class="card-presente">
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
-      <h3>Noite de Hotel</h3>
-      <button onclick="marcarComprado(this)">Contribuir</button>
-    </div>
-  </div>
-</section>
-
 <section class="card">
   <h2>✅ Confirme sua presença</h2>
 
+  <p>Clique no botão abaixo para confirmar via WhatsApp:</p>
+
   <a 
-    href="https://wa.me/SEUNUMERO?text=Olá,%20confirmo%20minha%20presença%20💍"
-    class="whatsapp">
-    Confirmar via WhatsApp
+    href="https://wa.me/22988214942?text=Olá,%20confirmo%20minha%20presença%20no%20casamento%20💍"
+    target="_blank"
+    class="botao-whatsapp">
+    
+    Confirmar Presença
   </a>
 </section>
+<section class="card">
+  <h2>🎁 Lista de Presentes</h2>
+
+  <!-- CATEGORIA -->
+  <h3 class="categoria">🍳 Cozinha</h3>
+  <div class="presentes">
+
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/61LtuGzXeaL._AC_SL1500_.jpg">
+      <h4>Air Fryer</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/71K0y7qT7XL._AC_SL1500_.jpg">
+      <h4>Cafeteira</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
+
+  </div>
+
+  <!-- CATEGORIA -->
+  <h3 class="categoria">🍽️ Utensílios</h3>
+  <div class="presentes">
+
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/71rIkvWv6bL._AC_SL1500_.jpg">
+      <h4>Jogo de Panelas</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
+
+  </div>
+
+  <!-- CATEGORIA -->
+  <h3 class="categoria">🏠 Casa</h3>
+  <div class="presentes">
+
+    <div class="card-presente">
+      <img src="https://m.media-amazon.com/images/I/71j8d5FZxGL._AC_SL1500_.jpg">
+      <h4>Jogo de Cama</h4>
+      <a href="https://www.amazon.com.br/" target="_blank">Comprar</a>
+      <button onclick="marcarComprado(this)">Já comprei</button>
+    </div>
+<section class="card">
+  <h2>✈️ Lua de Mel</h2>
+  <p>Nos ajude a viver momentos inesquecíveis 💕</p>
+
+  <div class="presentes">
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
+      <h3>🏨 Noite de Hotel</h3>
+      <p>R$ 150</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98">
+      <h3>🍽️ Jantar Romântico</h3>
+      <p>R$ 100</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+      <h3>🏝️ Passeio Especial</h3>
+      <p>R$ 200</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+    <div class="card-presente">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
+      <h3>✈️ Passagem Aérea</h3>
+      <p>R$ 300</p>
+      <a href="#" target="_blank">Presentear</a>
+      <button onclick="marcarComprado(this)">Contribuir</button>
+    </div>
+
+  </div>
+
+  <p class="pix">
+    💰 Ou contribua diretamente via PIX:<br>
+    <strong>tiago123</strong>
+  </p>
+</section>
+  
+</section>
+
+
+<footer>
+  <p>Com amor, esperamos você 💕</p>
+</footer>
 
 <script src="script.js"></script>
 
