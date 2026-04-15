@@ -82,6 +82,12 @@ a:hover, button:hover {
 .card-presente:hover {
   transform: scale(1.05);
 }
+.card-presente img {
+  width: 100%;
+  height: 160px;        /* tamanho padrão */
+  object-fit: cover;    /* corta sem deformar */
+  border-radius: 10px 10px 0 0;
+}
 
 /* GALERIA */
 .galeria img {
@@ -122,4 +128,27 @@ h2::after {
   height: 2px;
   background: #c9184a;
   margin: 10px auto;
+}
+@media (max-width: 768px) {
+
+  .card-presente {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .card-presente img {
+    height: 140px;   /* menor no celular */
+  }
+
+}
+.card-presente {
+  overflow: hidden;
+}
+
+.card-presente img {
+  transition: 0.3s;
+}
+
+.card-presente:hover img {
+  transform: scale(1.05);
 }
