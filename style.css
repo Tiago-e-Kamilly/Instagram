@@ -1,9 +1,17 @@
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
   background: #fafafa;
   text-align: center;
   color: #333;
+}
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 /* HEADER PREMIUM */
@@ -37,12 +45,10 @@ header h1 {
 
 /* CARDS */
 .card {
-  background: white;
-  margin: 40px auto;
-  width: 80%;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
 }
 
 .destaque {
@@ -283,6 +289,33 @@ footer {
   p {
     font-size: 14px;
     line-height: 1.5;
+  }
+
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.presentes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-presente {
+  width: 100%;
+  max-width: 250px;
+}
+@media (max-width: 768px) {
+
+  .presentes {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-presente {
+    max-width: 100%;
   }
 
 }
