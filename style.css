@@ -20,14 +20,14 @@ header {
 }
 
 .overlay {
-  background: rgba(150, 79, 76, 1);
+  background: rgba(245, 245, 220);
   backdrop-filter: blur(3px);
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #ffffff;
+  color: #F5F5DC;
   text-align: center;
 }
 
