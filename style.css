@@ -11,14 +11,14 @@ body {
 }
 
 /* HERO */
-header {
-  height: 70vh;
-  background: #7a1c2f;
-  position: relative;
-}
+header { height: 70vh; 
+       background: #7a1c2f;
+        background-size: cover;
+        background-position: center;
+        position: relative; }
 
 .overlay {
-  background: rgba(245, 245, 220);
+  background: #7a1c2f;
   backdrop-filter: blur(3px);
   height: 100%;
   display: flex;
