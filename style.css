@@ -11,11 +11,7 @@ body {
 }
 
 /* HERO */
-header { height: 70vh; 
-       background: #7a1c2f;
-        background-size: cover;
-        background-position: center;
-        position: relative; }
+/* HERO */ header { height: 70vh; background: url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486'); background-size: cover; background-position: center; position: relative; }
 
 .overlay {
   background: #7a1c2f;
