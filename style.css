@@ -13,9 +13,7 @@ body {
 /* HERO */
 header {
   height: 70vh;
- background: rgba(245, 245, 220);
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #7a1c2f, #c9184a);
   position: relative;
 }
 
