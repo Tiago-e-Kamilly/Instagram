@@ -20,7 +20,7 @@ header {
 }
 
 .overlay {
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(150, 79, 76, 1);
   backdrop-filter: blur(3px);
   height: 100%;
   display: flex;
