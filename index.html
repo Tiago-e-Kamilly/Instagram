@@ -3,884 +3,1474 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studio Psi — Editor Visual</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Studio Psi — Criador de Posts</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;1,300&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --b1:#2A1208;--b2:#3D1A0F;--b3:#5C2A1A;--b4:#6B3A2A;--b5:#7D4A35;
-  --b6:#8B5E52;--b7:#9E7060;--b8:#B08070;--b9:#C4957A;--b10:#D4A898;
-  --b11:#E8D5C4;--b12:#F0E6DC;--b13:#F5EDE4;--b14:#FFF8F3;
-  --acc:#D4A56A;--acc2:#C4957A;
-  --dark:#1A0A04;--surface:#221008;--panel:#2E1510;--card:#3A1C10;
-  --border:rgba(196,149,122,.18);--border2:rgba(196,149,122,.35);
-  --text:#F5EDE4;--textm:#C4957A;--texts:#8B5E52;
-  --radius:12px;--radius-lg:18px;
-  --shadow:0 8px 40px rgba(0,0,0,.5);
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --ink:    #1A0A02;
+  --d1:     #2E1208;
+  --d2:     #4A1E0F;
+  --m1:     #6B3420;
+  --m2:     #8C5235;
+  --l1:     #B07848;
+  --l2:     #C9996A;
+  --p1:     #E0C09A;
+  --p2:     #EDD8BA;
+  --cr:     #F6EEE3;
+  --white:  #FDF9F4;
+
+  --ui-bg:    #12080300;
+  --panel-bg: #1C0D06;
+  --panel2:   #241208;
+  --panel3:   #2E1810;
+  --border:   rgba(176,120,72,.18);
+  --border2:  rgba(176,120,72,.08);
+
+  --radius: 12px;
+  --sans: 'DM Sans', sans-serif;
+  --serif: 'Playfair Display', serif;
+  --corm: 'Cormorant Garamond', serif;
+  --cinzel: 'Cinzel', serif;
 }
-html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'DM Sans',sans-serif;color:var(--text);}
 
-/* LAYOUT */
-#app{display:grid;grid-template-rows:52px 1fr;height:100vh;}
-#topbar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:100;}
-#main{display:grid;grid-template-columns:280px 1fr 300px;height:calc(100vh - 52px);overflow:hidden;}
+/* ═══════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { height:100%; }
+body {
+  font-family: var(--sans);
+  background: var(--panel-bg);
+  color: var(--p1);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
-/* TOPBAR */
-.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--b9);letter-spacing:.06em;margin-right:auto;}
-.logo span{font-style:italic;color:var(--acc);}
-.topbar-actions{display:flex;gap:8px;align-items:center;}
-.tbtn{padding:6px 14px;border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--textm);transition:all .2s;}
-.tbtn:hover{background:var(--card);color:var(--text);}
-.tbtn.primary{background:var(--b4);border-color:var(--b4);color:#fff;}
-.tbtn.primary:hover{background:var(--b5);}
-.size-selector{display:flex;gap:4px;align-items:center;}
-.size-btn{padding:4px 8px;border-radius:6px;font-size:10px;border:1px solid var(--border);background:transparent;color:var(--texts);cursor:pointer;transition:all .2s;}
-.size-btn.active,.size-btn:hover{background:var(--b4);color:#fff;border-color:var(--b4);}
+/* Scrollbar */
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--m1); border-radius:4px; }
 
-/* LEFT PANEL */
-#left-panel{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.panel-tabs{display:flex;border-bottom:1px solid var(--border);}
-.ptab{flex:1;padding:10px 4px;font-size:10px;text-align:center;cursor:pointer;color:var(--texts);border:none;background:transparent;letter-spacing:.05em;text-transform:uppercase;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.ptab.active{color:var(--b9);border-bottom:2px solid var(--b4);}
-.panel-body{flex:1;overflow-y:auto;padding:16px;}
-.panel-body::-webkit-scrollbar{width:3px;}
-.panel-body::-webkit-scrollbar-thumb{background:var(--b3);border-radius:4px;}
-.section-title{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--texts);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+/* ═══════════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════════ */
+.topbar {
+  height: 52px;
+  background: var(--d1);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 0;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 50;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 32px;
+}
+.logo-mark {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--l1);
+  border-radius: 50%;
+  display: flex; align-items:center; justify-content:center;
+  font-family: var(--cinzel);
+  font-size: 11px;
+  color: var(--l1);
+  letter-spacing: 1px;
+}
+.logo-text {
+  font-family: var(--cinzel);
+  font-size: 13px;
+  color: var(--p1);
+  letter-spacing: 3px;
+  font-weight: 400;
+}
+.topbar-sep { width:1px; height:24px; background:var(--border); margin:0 16px; }
 
-/* ELEMENTS / SHAPES */
-.elements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px;}
-.el-btn{aspect-ratio:1;border-radius:10px;border:1px solid var(--border);background:var(--panel);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all .2s;font-size:18px;}
-.el-btn:hover{border-color:var(--b4);background:var(--card);}
-.el-btn span{font-size:9px;color:var(--texts);font-family:'DM Sans',sans-serif;}
+.tab-group { display:flex; gap:2px; }
+.tab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--l2);
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .3px;
+}
+.tab:hover { background: rgba(176,120,72,.1); color: var(--p1); }
+.tab.active { background: rgba(176,120,72,.15); color: var(--p2); }
 
-/* TEMPLATES */
-.tpl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
-.tpl-card{aspect-ratio:.75;border-radius:10px;border:1px solid var(--border);overflow:hidden;cursor:pointer;position:relative;transition:all .2s;}
-.tpl-card:hover{border-color:var(--b4);transform:translateY(-2px);}
-.tpl-card canvas{width:100%;height:100%;display:block;}
-.tpl-card .tpl-name{position:absolute;bottom:0;left:0;right:0;padding:6px;font-size:9px;text-align:center;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;letter-spacing:.05em;text-transform:uppercase;}
+.topbar-right { margin-left:auto; display:flex; gap:10px; align-items:center; }
+.btn-export {
+  background: linear-gradient(135deg, var(--m1), var(--l1));
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: .5px;
+  transition: all .2s;
+  box-shadow: 0 2px 12px rgba(107,52,32,.4);
+}
+.btn-export:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(107,52,32,.5); }
+.btn-export:active { transform:translateY(0); }
 
-/* STICKERS / TEXT PRESETS */
-.sticker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
-.sticker-btn{padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--panel);cursor:pointer;font-size:11px;text-align:center;color:var(--textm);transition:all .2s;font-family:'Cormorant Garamond',serif;font-style:italic;}
-.sticker-btn:hover{border-color:var(--b4);background:var(--card);}
+/* ═══════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════ */
+.workspace {
+  display: grid;
+  grid-template-columns: 260px 1fr 300px;
+  flex: 1;
+  overflow: hidden;
+}
 
-/* CANVAS AREA */
-#canvas-area{background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-#canvas-wrapper{position:relative;box-shadow:var(--shadow);}
-#mainCanvas{display:block;cursor:crosshair;}
-.canvas-toolbar{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);border-radius:100px;padding:6px 10px;display:flex;gap:4px;align-items:center;}
-.tool-btn{width:36px;height:36px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--textm);font-size:16px;transition:all .2s;}
-.tool-btn:hover{background:var(--card);color:var(--text);}
-.tool-btn.active{background:var(--b4);color:#fff;}
-.tool-sep{width:1px;height:24px;background:var(--border);margin:0 2px;}
-.zoom-info{font-size:10px;color:var(--texts);padding:0 8px;}
+/* ═══════════════════════════════════════════
+   PANELS
+═══════════════════════════════════════════ */
+.panel-left {
+  background: var(--panel-bg);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.panel-right {
+  background: var(--panel2);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
 
-/* RIGHT PANEL */
-#right-panel{background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;padding:16px;}
-#right-panel::-webkit-scrollbar{width:3px;}
-#right-panel::-webkit-scrollbar-thumb{background:var(--b3);border-radius:4px;}
+.section-head {
+  padding: 14px 16px 10px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--m2);
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-head::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--border2);
+}
 
-/* COLOR PANEL */
-.palette-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-.color-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;flex-shrink:0;}
-.color-swatch:hover{transform:scale(1.15);}
-.color-swatch.active{border-color:#fff;box-shadow:0 0 0 3px var(--b4);}
-.custom-color-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
-.custom-color-row input[type=color]{width:36px;height:36px;border-radius:8px;border:1px solid var(--border2);background:var(--panel);cursor:pointer;padding:2px;}
-.custom-color-row span{font-size:11px;color:var(--textm);}
+.section-body { padding: 14px 16px; }
 
-/* SLIDERS */
-.prop-row{margin-bottom:12px;}
-.prop-row label{font-size:10px;color:var(--texts);display:block;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;}
-.prop-row input[type=range]{width:100%;accent-color:var(--b4);}
-.prop-val{font-size:10px;color:var(--textm);float:right;}
+/* ═══════════════════════════════════════════
+   TEMPLATES
+═══════════════════════════════════════════ */
+.tpl-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+}
+.tpl-item {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+}
+.tpl-item:hover { border-color: var(--l1); transform: translateX(2px); }
+.tpl-item.active { border-color: var(--l1); box-shadow: 0 0 0 1px var(--l1), 0 4px 20px rgba(176,120,72,.2); }
+.tpl-thumb {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.tpl-thumb canvas { width:100%; height:100%; }
+.tpl-meta {
+  padding: 8px 10px;
+  background: var(--panel3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tpl-name { font-size: 11px; font-weight: 500; color: var(--p1); letter-spacing: .3px; }
+.tpl-tag {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--l1);
+  opacity: .7;
+}
+.tpl-active-dot {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--l1);
+  display: none;
+  box-shadow: 0 0 8px var(--l1);
+}
+.tpl-item.active .tpl-active-dot { display: block; }
 
-/* TEXT PROPERTIES */
-.font-select{width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;margin-bottom:8px;cursor:pointer;}
-.align-row{display:flex;gap:4px;margin-bottom:10px;}
-.align-btn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--texts);cursor:pointer;font-size:13px;transition:all .2s;}
-.align-btn.active,.align-btn:hover{background:var(--b4);border-color:var(--b4);color:#fff;}
-.style-row{display:flex;gap:4px;margin-bottom:12px;}
-.style-btn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--texts);cursor:pointer;font-size:11px;transition:all .2s;}
-.style-btn.active{background:var(--b4);border-color:var(--b4);color:#fff;}
+/* ═══════════════════════════════════════════
+   INPUTS
+═══════════════════════════════════════════ */
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--m2);
+  margin-bottom: 6px;
+}
+.field textarea, .field input[type=text] {
+  width: 100%;
+  background: rgba(255,255,255,.04);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--p1);
+  outline: none;
+  resize: none;
+  transition: border .15s, background .15s;
+  line-height: 1.6;
+}
+.field textarea:focus, .field input[type=text]:focus {
+  border-color: var(--l1);
+  background: rgba(255,255,255,.07);
+}
+.field textarea { height: 64px; }
 
-/* TEXT INPUT */
-.text-area-input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;outline:none;transition:border-color .2s;}
-.text-area-input:focus{border-color:var(--b4);}
-.add-btn{width:100%;padding:10px;border-radius:10px;border:none;background:var(--b4);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;transition:all .2s;letter-spacing:.03em;}
-.add-btn:hover{background:var(--b5);}
+/* ═══════════════════════════════════════════
+   SLIDERS
+═══════════════════════════════════════════ */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.slider-label { font-size: 10px; color: var(--m2); min-width: 80px; }
+.slider-val { font-size: 10px; color: var(--l1); min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--l1);
+  border: 2px solid var(--panel-bg);
+  box-shadow: 0 0 6px rgba(176,120,72,.5);
+  cursor: pointer;
+  transition: transform .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
-/* LAYERS */
-.layer-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel);margin-bottom:6px;cursor:pointer;transition:all .2s;}
-.layer-item:hover{border-color:var(--b4);}
-.layer-item.selected{border-color:var(--b4);background:var(--card);}
-.layer-thumb{width:28px;height:28px;border-radius:6px;background:var(--b4);flex-shrink:0;}
-.layer-name{font-size:11px;color:var(--textm);flex:1;}
-.layer-actions{display:flex;gap:4px;}
-.layer-act{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--texts);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.layer-act:hover{background:var(--b3);color:var(--text);}
+/* ═══════════════════════════════════════════
+   COLOR SWATCHES
+═══════════════════════════════════════════ */
+.swatch-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+.sw {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  transition: all .18s;
+  position: relative;
+  flex-shrink: 0;
+}
+.sw:hover { transform: scale(1.15); }
+.sw.active { border-color: var(--white); box-shadow: 0 0 0 1.5px var(--l1), 0 4px 10px rgba(0,0,0,.3); }
 
-/* EXPORT */
-.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.exp-card{padding:14px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);cursor:pointer;text-align:center;transition:all .2s;}
-.exp-card:hover{border-color:var(--b4);background:var(--card);}
-.exp-card .exp-icon{font-size:22px;margin-bottom:6px;}
-.exp-card .exp-label{font-size:10px;color:var(--textm);letter-spacing:.04em;text-transform:uppercase;}
-.exp-card .exp-sub{font-size:9px;color:var(--texts);margin-top:2px;}
+/* ═══════════════════════════════════════════
+   FONT SELECTOR
+═══════════════════════════════════════════ */
+.font-options { display:flex; flex-direction:column; gap:5px; }
+.font-opt {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: all .18s;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.font-opt:hover { border-color: var(--l2); background: rgba(255,255,255,.03); }
+.font-opt.active { border-color: var(--l1); background: rgba(176,120,72,.08); }
+.font-preview { font-size: 18px; color: var(--p1); line-height: 1; }
+.font-preview.f-play { font-family: var(--serif); font-style:italic; }
+.font-preview.f-corm { font-family: var(--corm); font-size:22px; }
+.font-preview.f-cinz { font-family: var(--cinzel); font-size:14px; letter-spacing:2px; }
+.font-preview.f-dm   { font-family: var(--sans); font-weight:200; letter-spacing:3px; text-transform:uppercase; font-size:13px; }
+.font-name { font-size: 10px; color: var(--m2); letter-spacing:.5px; }
 
-/* FILTERS */
-.filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;}
-.filter-card{border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .2s;}
-.filter-card:hover,.filter-card.active{border-color:var(--b4);}
-.filter-card canvas{width:100%;display:block;}
-.filter-card .filter-name{font-size:8px;text-align:center;padding:3px;background:var(--panel);color:var(--textm);}
+/* ═══════════════════════════════════════════
+   TOGGLE CHIPS
+═══════════════════════════════════════════ */
+.chip-row { display:flex; flex-wrap:wrap; gap:6px; }
+.chip {
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  color: var(--l2);
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--l2); color: var(--p1); }
+.chip.active { border-color: var(--l1); background: rgba(176,120,72,.12); color: var(--p2); }
 
-/* TABS in right panel */
-.rpanel-tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;}
-.rptab{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--texts);font-size:10px;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.rptab.active{background:var(--b4);border-color:var(--b4);color:#fff;}
+/* ═══════════════════════════════════════════
+   CANVAS AREA (CENTER)
+═══════════════════════════════════════════ */
+.canvas-wrap {
+  background: #0D0602;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.canvas-wrap::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(176,120,72,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(107,52,32,.08) 0%, transparent 70%);
+  pointer-events:none;
+}
 
-/* DIVIDER */
-.divider{height:1px;background:var(--border);margin:14px 0;}
-.sub-title{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--texts);margin-bottom:8px;}
+/* Grid dots bg */
+.canvas-wrap::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image: radial-gradient(circle, rgba(176,120,72,.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events:none;
+}
 
-/* GRADIENT */
-.gradient-presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-.grad-pill{width:48px;height:22px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .2s;}
-.grad-pill.active,.grad-pill:hover{border-color:#fff;}
+.canvas-shell {
+  position: relative;
+  z-index:1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
 
-/* OVERLAY on canvas for selected object */
-#selection-overlay{position:absolute;pointer-events:none;border:2px dashed rgba(196,149,122,.8);border-radius:4px;display:none;}
+#main-canvas {
+  display: block;
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px rgba(176,120,72,.15),
+    0 24px 80px rgba(0,0,0,.6),
+    0 8px 30px rgba(0,0,0,.4);
+  cursor: default;
+}
+
+.canvas-ruler {
+  font-size: 10px;
+  color: rgba(176,120,72,.4);
+  letter-spacing: 2px;
+  font-family: var(--sans);
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT PANEL
+═══════════════════════════════════════════ */
+
+/* Feed preview */
+.feed-preview {
+  padding: 14px 16px;
+}
+.feed-label {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--m2);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.feed-label::after { content:''; flex:1; height:1px; background:var(--border2); }
+
+.ig-mock {
+  background: var(--panel3);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.ig-profile-bar {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border2);
+}
+.ig-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--m1), var(--l1));
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+}
+.ig-handle { font-size: 11px; font-weight: 500; color: var(--p1); }
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  background: var(--border2);
+}
+.ig-cell {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  background: var(--panel-bg);
+  transition: opacity .15s;
+}
+.ig-cell:hover { opacity: .85; }
+.ig-cell.slot-active::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  border: 2px solid var(--l1);
+  pointer-events:none;
+  box-shadow: inset 0 0 0 1px var(--panel-bg);
+}
+.ig-cell img { width:100%; height:100%; object-fit:cover; display:block; }
+.ig-cell .empty-slot {
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  color: rgba(176,120,72,.2);
+}
+
+/* Slot selector */
+.slot-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.slot-info { font-size: 10px; color: var(--m2); }
+.slot-nav { display:flex; gap:6px; }
+.slot-btn {
+  width:24px; height:24px;
+  border:1px solid var(--border);
+  border-radius:5px;
+  background:transparent;
+  color:var(--l2);
+  font-size:12px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s;
+}
+.slot-btn:hover { border-color:var(--l1); color:var(--p1); }
+
+/* Style chips for right panel */
+.pattern-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.pattern-opt {
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:8px;
+  cursor:pointer;
+  transition:all .18s;
+  text-align:center;
+}
+.pattern-opt:hover { border-color:var(--l2); }
+.pattern-opt.active { border-color:var(--l1); background:rgba(176,120,72,.08); }
+.pattern-thumb {
+  height:36px;
+  border-radius:5px;
+  margin-bottom:5px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+.pattern-name { font-size:9px; color:var(--m2); letter-spacing:1px; text-transform:uppercase; }
+
+/* Divider */
+.divider { height:1px; background:var(--border2); margin:2px 0; }
+
+/* Overlay opacity */
+.opacity-track { display:flex; align-items:center; gap:8px; }
 </style>
 </head>
 <body>
-<div id="app">
 
-<!-- TOPBAR -->
-<div id="topbar">
-  <div class="logo">Studio<span>Psi</span></div>
-  <div class="size-selector">
-    <button class="size-btn active" onclick="setCanvasSize(1080,1080,this)">Feed</button>
-    <button class="size-btn" onclick="setCanvasSize(1080,1350,this)">Retrato</button>
-    <button class="size-btn" onclick="setCanvasSize(1080,1920,this)">Story</button>
-    <button class="size-btn" onclick="setCanvasSize(1080,566,this)">Banner</button>
+<!-- ═══ TOP BAR ═══ -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">Ψ</div>
+    <div class="logo-text">STUDIO PSI</div>
   </div>
-  <div class="topbar-actions">
-    <button class="tbtn" onclick="undo()">↩ Desfazer</button>
-    <button class="tbtn" onclick="redo()">Refazer ↪</button>
-    <button class="tbtn" onclick="clearAll()">Limpar</button>
-    <button class="tbtn primary" onclick="showExport()">⬇ Exportar</button>
+  <div class="topbar-sep"></div>
+  <div class="tab-group">
+    <div class="tab active">✦ Editor</div>
+    <div class="tab">Feed</div>
+    <div class="tab">Tipografia</div>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-export" onclick="exportPNG()">⬇ Exportar 1080px</button>
   </div>
 </div>
 
-<!-- MAIN -->
-<div id="main">
+<!-- ═══ WORKSPACE ═══ -->
+<div class="workspace">
 
-  <!-- LEFT PANEL -->
-  <div id="left-panel">
-    <div class="panel-tabs">
-      <button class="ptab active" onclick="leftTab('templates',this)">Posts</button>
-      <button class="ptab" onclick="leftTab('elements',this)">Formas</button>
-      <button class="ptab" onclick="leftTab('stickers',this)">Texto+</button>
+  <!-- ══ LEFT PANEL ══ -->
+  <div class="panel-left">
+
+    <!-- Templates -->
+    <div class="section-head">Templates</div>
+    <div class="tpl-scroll" id="tpl-list"></div>
+
+    <div class="divider"></div>
+
+    <!-- Conteúdo -->
+    <div class="section-head">Conteúdo</div>
+    <div class="section-body">
+      <div class="field">
+        <label>Título / Frase Principal</label>
+        <textarea id="f-title" oninput="scheduleRender()">Você é permitida a sentir tudo isso.</textarea>
+      </div>
+      <div class="field">
+        <label>Texto de Apoio</label>
+        <textarea id="f-sub" oninput="scheduleRender()">Acolher suas emoções é o primeiro passo para a cura.</textarea>
+      </div>
+      <div class="field">
+        <label>Assinatura</label>
+        <input type="text" id="f-tag" value="@seunome.psi" oninput="scheduleRender()">
+      </div>
+      <div class="field">
+        <label>Número do Slide (opcional)</label>
+        <input type="text" id="f-num" value="" placeholder="01 / 06" oninput="scheduleRender()">
+      </div>
     </div>
-    <div class="panel-body" id="left-body"></div>
+
+    <div class="divider"></div>
+
+    <!-- Tipografia -->
+    <div class="section-head">Tipografia</div>
+    <div class="section-body">
+      <div class="font-options" id="font-opts">
+        <div class="font-opt active" data-f="playfair" onclick="setFont('playfair',this)">
+          <span class="font-preview f-play">Palavra</span>
+          <span class="font-name">Playfair — Elegante</span>
+        </div>
+        <div class="font-opt" data-f="cormorant" onclick="setFont('cormorant',this)">
+          <span class="font-preview f-corm">Palavra</span>
+          <span class="font-name">Cormorant — Editorial</span>
+        </div>
+        <div class="font-opt" data-f="cinzel" onclick="setFont('cinzel',this)">
+          <span class="font-preview f-cinz">PALAVRA</span>
+          <span class="font-name">Cinzel — Luxo</span>
+        </div>
+        <div class="font-opt" data-f="dm" onclick="setFont('dm',this)">
+          <span class="font-preview f-dm">PALAVRA</span>
+          <span class="font-name">DM Sans Light — Moderno</span>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="slider-row">
+        <span class="slider-label">Tamanho</span>
+        <input type="range" id="sz" min="20" max="80" value="44" oninput="document.getElementById('sz-v').textContent=this.value+'px';scheduleRender()">
+        <span class="slider-val" id="sz-v">44px</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Espaçamento</span>
+        <input type="range" id="ls" min="-2" max="12" value="0" oninput="document.getElementById('ls-v').textContent=this.value;scheduleRender()">
+        <span class="slider-val" id="ls-v">0</span>
+      </div>
+    </div>
+
   </div>
 
-  <!-- CANVAS -->
-  <div id="canvas-area">
-    <div id="canvas-wrapper">
-      <canvas id="mainCanvas"></canvas>
-      <div id="selection-overlay"></div>
-    </div>
-    <div class="canvas-toolbar">
-      <button class="tool-btn active" title="Selecionar" onclick="setTool('select',this)">⬡</button>
-      <button class="tool-btn" title="Texto" onclick="setTool('text',this)">T</button>
-      <button class="tool-btn" title="Pincel" onclick="setTool('brush',this)">✏</button>
-      <button class="tool-btn" title="Borracha" onclick="setTool('eraser',this)">◻</button>
-      <button class="tool-btn" title="Forma" onclick="setTool('shape',this)">⬟</button>
-      <button class="tool-btn" title="Preencher" onclick="setTool('fill',this)">⬤</button>
-      <div class="tool-sep"></div>
-      <button class="tool-btn" title="Zoom -" onclick="zoom(-0.1)">−</button>
-      <span class="zoom-info" id="zoomLabel">100%</span>
-      <button class="tool-btn" title="Zoom +" onclick="zoom(0.1)">+</button>
+  <!-- ══ CANVAS CENTER ══ -->
+  <div class="canvas-wrap">
+    <div class="canvas-shell">
+      <canvas id="main-canvas" width="1080" height="1080"></canvas>
+      <div class="canvas-ruler">1080 × 1080 px — Feed Instagram</div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
-  <div id="right-panel">
-    <div class="rpanel-tabs">
-      <button class="rptab active" onclick="rightTab('cor',this)">Cor</button>
-      <button class="rptab" onclick="rightTab('texto',this)">Texto</button>
-      <button class="rptab" onclick="rightTab('filtros',this)">Filtros</button>
-      <button class="rptab" onclick="rightTab('camadas',this)">Camadas</button>
-      <button class="rptab" onclick="rightTab('exportar',this)">Exportar</button>
-    </div>
-    <div id="right-body"></div>
-  </div>
+  <!-- ══ RIGHT PANEL ══ -->
+  <div class="panel-right">
 
-</div>
+    <!-- Feed mock -->
+    <div class="feed-preview">
+      <div class="feed-label">Prévia do Feed</div>
+      <div class="ig-mock">
+        <div class="ig-profile-bar">
+          <div class="ig-avatar">🤎</div>
+          <div>
+            <div class="ig-handle" id="ig-handle-display">@seunome.psi</div>
+          </div>
+        </div>
+        <div class="ig-grid" id="ig-grid"></div>
+      </div>
+      <div class="slot-row">
+        <span class="slot-info" id="slot-info">Post 1 de 9</span>
+        <div class="slot-nav">
+          <button class="slot-btn" onclick="prevSlot()">‹</button>
+          <button class="slot-btn" onclick="nextSlot()">›</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Cores -->
+    <div class="section-head">Paleta de Cores</div>
+    <div class="section-body">
+      <div class="feed-label" style="margin-bottom:8px">Fundo</div>
+      <div class="swatch-grid" id="sw-bg">
+        <div class="sw active" data-v="g-warm"   style="background:linear-gradient(135deg,#4A1E0F,#C9996A)" onclick="setBg('g-warm',this)"></div>
+        <div class="sw" data-v="g-deep"   style="background:linear-gradient(135deg,#1A0A02,#6B3420)" onclick="setBg('g-deep',this)"></div>
+        <div class="sw" data-v="g-caramel" style="background:linear-gradient(135deg,#8C5235,#E0C09A)" onclick="setBg('g-caramel',this)"></div>
+        <div class="sw" data-v="g-mocha"  style="background:linear-gradient(135deg,#2E1208,#8C5235)" onclick="setBg('g-mocha',this)"></div>
+        <div class="sw" data-v="g-sand"   style="background:linear-gradient(135deg,#C9996A,#F6EEE3)" onclick="setBg('g-sand',this)"></div>
+        <div class="sw" data-v="#2E1208"  style="background:#2E1208" onclick="setBg('#2E1208',this)"></div>
+        <div class="sw" data-v="#4A1E0F"  style="background:#4A1E0F" onclick="setBg('#4A1E0F',this)"></div>
+        <div class="sw" data-v="#6B3420"  style="background:#6B3420" onclick="setBg('#6B3420',this)"></div>
+        <div class="sw" data-v="#8C5235"  style="background:#8C5235" onclick="setBg('#8C5235',this)"></div>
+        <div class="sw" data-v="#C9996A"  style="background:#C9996A" onclick="setBg('#C9996A',this)"></div>
+        <div class="sw" data-v="#E0C09A"  style="background:#E0C09A" onclick="setBg('#E0C09A',this)"></div>
+        <div class="sw" data-v="#F6EEE3"  style="background:#F6EEE3" onclick="setBg('#F6EEE3',this)"></div>
+      </div>
+
+      <div style="height:12px"></div>
+      <div class="feed-label" style="margin-bottom:8px">Texto</div>
+      <div class="swatch-grid" id="sw-txt">
+        <div class="sw active" data-v="#FDF9F4" style="background:#FDF9F4;border:1px solid rgba(255,255,255,.2)" onclick="setTxt('#FDF9F4',this)"></div>
+        <div class="sw" data-v="#EDD8BA" style="background:#EDD8BA" onclick="setTxt('#EDD8BA',this)"></div>
+        <div class="sw" data-v="#C9996A" style="background:#C9996A" onclick="setTxt('#C9996A',this)"></div>
+        <div class="sw" data-v="#8C5235" style="background:#8C5235" onclick="setTxt('#8C5235',this)"></div>
+        <div class="sw" data-v="#2E1208" style="background:#2E1208;border:1px solid rgba(255,255,255,.1)" onclick="setTxt('#2E1208',this)"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Padrão de fundo -->
+    <div class="section-head">Efeito de Fundo</div>
+    <div class="section-body">
+      <div class="pattern-grid" id="pat-grid">
+        <div class="pattern-opt active" data-p="noise" onclick="setPat('noise',this)">
+          <div class="pattern-thumb" style="background:#6B3420">🌫</div>
+          <div class="pattern-name">Textura</div>
+        </div>
+        <div class="pattern-opt" data-p="circles" onclick="setPat('circles',this)">
+          <div class="pattern-thumb" style="background:#4A1E0F">◎</div>
+          <div class="pattern-name">Círculos</div>
+        </div>
+        <div class="pattern-opt" data-p="lines" onclick="setPat('lines',this)">
+          <div class="pattern-thumb" style="background:#2E1208" style="display:flex;align-items:center;justify-content:center">≡</div>
+          <div class="pattern-name">Linhas</div>
+        </div>
+        <div class="pattern-opt" data-p="dots" onclick="setPat('dots',this)">
+          <div class="pattern-thumb" style="background:#8C5235">·:·</div>
+          <div class="pattern-name">Pontos</div>
+        </div>
+        <div class="pattern-opt" data-p="halftone" onclick="setPat('halftone',this)">
+          <div class="pattern-thumb" style="background:#6B3420">⠿</div>
+          <div class="pattern-name">Halftone</div>
+        </div>
+        <div class="pattern-opt" data-p="none" onclick="setPat('none',this)">
+          <div class="pattern-thumb" style="background:#4A1E0F">—</div>
+          <div class="pattern-name">Limpo</div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+      <div class="slider-row">
+        <span class="slider-label">Intensidade</span>
+        <input type="range" id="pat-op" min="0" max="100" value="30" oninput="document.getElementById('pat-op-v').textContent=this.value+'%';scheduleRender()">
+        <span class="slider-val" id="pat-op-v">30%</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Ornamentos -->
+    <div class="section-head">Ornamentos</div>
+    <div class="section-body">
+      <div class="chip-row" id="orn-chips">
+        <div class="chip active" data-o="filetes" onclick="setOrn('filetes',this)">Filetes</div>
+        <div class="chip" data-o="arcos" onclick="setOrn('arcos',this)">Arcos</div>
+        <div class="chip" data-o="botanico" onclick="setOrn('botanico',this)">Botânico</div>
+        <div class="chip" data-o="minimalista" onclick="setOrn('minimalista',this)">Minimalista</div>
+        <div class="chip" data-o="moldura" onclick="setOrn('moldura',this)">Moldura</div>
+        <div class="chip" data-o="nenhum" onclick="setOrn('nenhum',this)">Nenhum</div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────
-const canvas = document.getElementById('mainCanvas');
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+const S = {
+  tpl: 'centrado',
+  bg: 'g-warm',
+  txt: '#FDF9F4',
+  font: 'playfair',
+  pat: 'noise',
+  orn: 'filetes',
+  sz: 44,
+  ls: 0,
+};
+
+let feedSlots = Array(9).fill(null);
+let activeSlot = 0;
+let renderTimer = null;
+
+/* ═══════════════════════════════════════════
+   TEMPLATES CONFIG
+═══════════════════════════════════════════ */
+const TEMPLATES = [
+  { id:'centrado',   name:'Frase Centrada',  tag:'Clássico',  defaultBg:'g-warm'  },
+  { id:'editorial',  name:'Editorial',        tag:'Moderno',   defaultBg:'g-deep'  },
+  { id:'moldura',    name:'Moldura Dupla',   tag:'Luxo',      defaultBg:'#2E1208' },
+  { id:'split',      name:'Divisão Diagonal', tag:'Bold',     defaultBg:'g-mocha' },
+  { id:'minimal',    name:'Ultra Minimal',    tag:'Clean',    defaultBg:'#F6EEE3' },
+  { id:'carrossel',  name:'Slide Carrossel',  tag:'Série',    defaultBg:'g-deep'  },
+  { id:'botanico',   name:'Botânico',         tag:'Orgânico', defaultBg:'g-caramel'},
+  { id:'noturno',    name:'Noturno',           tag:'Dark',    defaultBg:'#1A0A02' },
+];
+
+/* ═══════════════════════════════════════════
+   BG RESOLVER
+═══════════════════════════════════════════ */
+const BG_MAP = {
+  'g-warm':    [['#4A1E0F',0],['#9B6040',.5],['#C9996A',1]],
+  'g-deep':    [['#1A0A02',0],['#3D1A0C',.5],['#6B3420',1]],
+  'g-caramel': [['#8C5235',0],['#C9996A',.5],['#EDD8BA',1]],
+  'g-mocha':   [['#2E1208',0],['#5C2C18',.5],['#8C5235',1]],
+  'g-sand':    [['#C9996A',0],['#DDB98A',.5],['#F6EEE3',1]],
+};
+
+function makeBg(ctx, W, H) {
+  const v = S.bg;
+  if (BG_MAP[v]) {
+    const stops = BG_MAP[v];
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    stops.forEach(([c, p]) => g.addColorStop(p, c));
+    return g;
+  }
+  return v;
+}
+
+/* ═══════════════════════════════════════════
+   FONT RESOLVER
+═══════════════════════════════════════════ */
+function fontStr(style='normal', weight=400, size=44) {
+  const families = {
+    playfair: `'Playfair Display', serif`,
+    cormorant: `'Cormorant Garamond', serif`,
+    cinzel: `'Cinzel', serif`,
+    dm: `'DM Sans', sans-serif`,
+  };
+  const fam = families[S.font] || families.playfair;
+  const it = (style==='italic' && S.font!=='cinzel' && S.font!=='dm') ? 'italic' : 'normal';
+  return `${it} ${weight} ${size}px ${fam}`;
+}
+
+/* ═══════════════════════════════════════════
+   TEXT WRAP
+═══════════════════════════════════════════ */
+function wrapLines(ctx, text, maxW) {
+  const words = text.split(' ');
+  const lines = [];
+  let cur = '';
+  for (const w of words) {
+    const test = cur ? cur + ' ' + w : w;
+    if (ctx.measureText(test).width > maxW && cur) {
+      lines.push(cur); cur = w;
+    } else cur = test;
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+function drawText(ctx, text, cx, cy, maxW, lh, align='center') {
+  const lines = wrapLines(ctx, text, maxW);
+  const totalH = lines.length * lh;
+  let y = cy - totalH/2 + lh*0.35;
+  ctx.textAlign = align;
+  const ax = align==='center' ? cx : align==='left' ? cx : cx;
+  lines.forEach(l => { ctx.fillText(l, ax, y); y += lh; });
+  return totalH;
+}
+
+/* ═══════════════════════════════════════════
+   PATTERN OVERLAYS
+═══════════════════════════════════════════ */
+function drawPattern(ctx, W, H, pat, opacity) {
+  ctx.save();
+  ctx.globalAlpha = opacity;
+
+  if (pat === 'noise') {
+    // Film grain noise
+    const imgd = ctx.createImageData(W, H);
+    const d = imgd.data;
+    for (let i=0; i<d.length; i+=4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      d[i]=d[i+1]=d[i+2]=v; d[i+3]=Math.random()*60;
+    }
+    ctx.putImageData(imgd, 0, 0);
+
+  } else if (pat === 'circles') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 0.8;
+    for (let i=1; i<=8; i++) {
+      ctx.beginPath();
+      ctx.arc(W/2, H/2, i*120, 0, Math.PI*2);
+      ctx.stroke();
+    }
+
+  } else if (pat === 'lines') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 0.6;
+    for (let y=0; y<H; y+=28) {
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+
+  } else if (pat === 'dots') {
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    for (let x=20; x<W; x+=30) for (let y=20; y<H; y+=30) {
+      ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI*2); ctx.fill();
+    }
+
+  } else if (pat === 'halftone') {
+    for (let x=0; x<W; x+=18) for (let y=0; y<H; y+=18) {
+      const dx = x-W/2, dy = y-H/2;
+      const r = Math.max(0, 4 - Math.sqrt(dx*dx+dy*dy)/200);
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════
+   ORNAMENT OVERLAYS
+═══════════════════════════════════════════ */
+function drawOrnament(ctx, W, H, orn, tc) {
+  const mid = W/2, alpha = 0.35;
+  ctx.save();
+  ctx.strokeStyle = tc;
+  ctx.fillStyle = tc;
+
+  if (orn === 'filetes') {
+    // Double thin line with center diamond
+    [[H*0.38],[H*0.62]].forEach(([y]) => {
+      ctx.globalAlpha = alpha * 0.6;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke();
+    });
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = 1.5;
+    [[H*0.38-4],[H*0.62+4]].forEach(([y]) => {
+      ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke();
+    });
+    // diamond center ornament
+    ctx.globalAlpha = alpha * 0.8;
+    [H*0.38, H*0.62].forEach(y => {
+      const s = 8;
+      ctx.beginPath();
+      ctx.moveTo(mid, y-s); ctx.lineTo(mid+s, y);
+      ctx.lineTo(mid, y+s); ctx.lineTo(mid-s, y); ctx.closePath();
+      ctx.fill();
+    });
+
+  } else if (orn === 'arcos') {
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.lineWidth = 1.5;
+    // top arc
+    ctx.beginPath(); ctx.arc(mid, 0, 360, 0, Math.PI); ctx.stroke();
+    // bottom arc
+    ctx.beginPath(); ctx.arc(mid, H, 360, Math.PI, 0); ctx.stroke();
+
+  } else if (orn === 'botanico') {
+    ctx.globalAlpha = alpha * 0.6;
+    ctx.font = '80px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🌿', 100, 200);
+    ctx.save();
+    ctx.translate(W-100, H-120);
+    ctx.rotate(Math.PI);
+    ctx.fillText('🌿', 0, 0);
+    ctx.restore();
+    // top small
+    ctx.font = '48px serif';
+    ctx.fillText('✦', mid, 110);
+    ctx.fillText('✦', mid, H-70);
+
+  } else if (orn === 'minimalista') {
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.lineWidth = 1;
+    // just subtle horizontal lines
+    const segments = [[160, 460, H*0.5], [W-460, W-160, H*0.5]];
+    segments.forEach(([x1,x2,y]) => {
+      ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
+    });
+    // center dot
+    ctx.beginPath(); ctx.arc(mid, H/2, 3, 0, Math.PI*2); ctx.fill();
+
+  } else if (orn === 'moldura') {
+    // Outer frame
+    const mg = 54, rr = 0;
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(mg, mg, W-mg*2, H-mg*2);
+    // Inner frame
+    ctx.globalAlpha = alpha * 0.2;
+    ctx.lineWidth = 0.6;
+    ctx.strokeRect(mg+14, mg+14, W-(mg+14)*2, H-(mg+14)*2);
+    // Corner ornaments
+    ctx.globalAlpha = alpha * 0.7;
+    ctx.font = '28px serif';
+    ctx.textAlign = 'center';
+    [[mg+8,mg+28],[W-mg-8,mg+28],[mg+8,H-mg-8],[W-mg-8,H-mg-8]].forEach(([x,y]) => {
+      ctx.fillText('✦', x, y);
+    });
+  }
+
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════
+   SHADOW HELPERS
+═══════════════════════════════════════════ */
+function setShadow(ctx, blur=20, color='rgba(0,0,0,0.35)') {
+  ctx.shadowBlur = blur; ctx.shadowColor = color;
+}
+function clearShadow(ctx) { ctx.shadowBlur=0; ctx.shadowColor='transparent'; }
+
+/* ═══════════════════════════════════════════
+   MAIN RENDER
+═══════════════════════════════════════════ */
+const canvas = document.getElementById('main-canvas');
 const ctx = canvas.getContext('2d');
-let tool = 'select';
-let currentColor = '#6B3A2A';
-let brushSize = 8;
-let opacity = 1;
-let currentFont = 'Cormorant Garamond, serif';
-let fontSize = 48;
-let textAlign = 'center';
-let fontWeight = '400';
-let fontStyle = 'normal';
-let currentFilter = 'none';
-let zoom = 1;
-let canvasW = 1080, canvasH = 1080;
-let displayW, displayH;
-let drawing = false;
-let lastX = 0, lastY = 0;
-let history = [], histIdx = -1;
-let layers = [];
-let selectedLayer = null;
-let shapeMode = 'rect';
-let shapeStart = null;
-let shapeSnap = null;
-let currentGradient = null;
+const W = 1080, H = 1080;
 
-const palette = [
-  '#2A1208','#3D1A0F','#5C2A1A','#6B3A2A','#7D4A35',
-  '#8B5E52','#9E7060','#B08070','#C4957A','#D4A898',
-  '#E8D5C4','#F0E6DC','#F5EDE4','#FFF8F3','#D4A56A',
-  '#B8860B','#8B7355','#A0522D','#CD853F','#DEB887',
-  '#1A0A04','#fff','#000','#F08080','#BC8F8F'
-];
+function render() {
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0,0,W,H);
 
-const gradients = [
-  {name:'Terracota',stops:['#6B3A2A','#C4957A']},
-  {name:'Marfim',stops:['#F5EDE4','#D4A898']},
-  {name:'Cobre',stops:['#3D1A0F','#D4A56A']},
-  {name:'Névoa',stops:['#E8D5C4','#8B5E52']},
-  {name:'Noite',stops:['#1A0A04','#6B3A2A']},
-  {name:'Ouro',stops:['#B8860B','#FFF8F3']},
-];
+  const tc    = S.txt;
+  const sz    = parseInt(document.getElementById('sz').value);
+  const ls    = parseInt(document.getElementById('ls').value);
+  const title = document.getElementById('f-title').value || '';
+  const sub   = document.getElementById('f-sub').value || '';
+  const tag   = document.getElementById('f-tag').value || '';
+  const num   = document.getElementById('f-num').value || '';
+  const patOp = parseInt(document.getElementById('pat-op').value)/100 * 0.6;
 
-const fonts = [
-  {label:'Cormorant Garamond',value:'Cormorant Garamond, serif'},
-  {label:'Playfair Display',value:'Playfair Display, serif'},
-  {label:'Lora',value:'Lora, serif'},
-  {label:'Cinzel',value:'Cinzel, serif'},
-  {label:'Raleway',value:'Raleway, sans-serif'},
-  {label:'DM Sans',value:'DM Sans, sans-serif'},
-];
+  // 1. Background
+  ctx.fillStyle = makeBg(ctx, W, H);
+  ctx.fillRect(0,0,W,H);
 
-const templates = [
-  {name:'Citação',fn:drawTplQuote},
-  {name:'Dica Mental',fn:drawTplTip},
-  {name:'Sobre Mim',fn:drawTplAbout},
-  {name:'Chamada',fn:drawTplCta},
-  {name:'Fundo Linho',fn:drawTplLinen},
-  {name:'Aquarela',fn:drawTplWater},
-];
+  // 2. Pattern
+  drawPattern(ctx, W, H, S.pat, patOp);
 
-const stickers = [
-  {label:'"Sua frase aqui"',text:'"Sua frase aqui"',font:'Cormorant Garamond, serif',size:52,style:'italic'},
-  {label:'Título Editorial',text:'SAÚDE MENTAL',font:'Cinzel, serif',size:36,style:'normal'},
-  {label:'Subtítulo',text:'por @suapsicologia',font:'Raleway, sans-serif',size:22,style:'normal'},
-  {label:'Citação longa',text:'"Cuidar de si é o primeiro passo para cuidar do outro."',font:'Lora, serif',size:26,style:'italic'},
-  {label:'Hashtag',text:'#PsicologiaParaMulheres',font:'DM Sans, sans-serif',size:18,style:'normal'},
-  {label:'CRP',text:'CRP 00/000000',font:'Raleway, sans-serif',size:16,style:'normal'},
-];
+  // 3. Ornament
+  drawOrnament(ctx, W, H, S.orn, tc);
 
-// ─── INIT ─────────────────────────────────────────────
-function initCanvas(){
-  setCanvasSize(1080,1080,document.querySelector('.size-btn.active'));
-  saveHistory();
-  buildLeftPanel('templates');
-  buildRightPanel('cor');
-}
+  // 4. Content by template
+  const tpl = S.tpl;
 
-function setCanvasSize(w,h,btn){
-  canvasW=w; canvasH=h;
-  const area = document.getElementById('canvas-area');
-  const maxW = area.clientWidth - 40;
-  const maxH = area.clientHeight - 80;
-  const scaleW = maxW/w, scaleH = maxH/h;
-  const scale = Math.min(scaleW, scaleH, 1);
-  displayW = Math.round(w*scale);
-  displayH = Math.round(h*scale);
-  canvas.width = w; canvas.height = h;
-  canvas.style.width = displayW+'px';
-  canvas.style.height = displayH+'px';
-  document.getElementById('canvas-wrapper').style.width = displayW+'px';
-  document.getElementById('canvas-wrapper').style.height = displayH+'px';
-  document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  ctx.fillStyle='#F5EDE4'; ctx.fillRect(0,0,w,h);
-}
+  if (tpl === 'centrado') {
+    // Classic centered quote
+    // Large italic quote mark ghost
+    ctx.save();
+    ctx.globalAlpha = 0.06;
+    ctx.font = `italic 700 500px 'Playfair Display', serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'left';
+    ctx.fillText('"', -20, 420);
+    ctx.restore();
 
-// ─── HISTORY ──────────────────────────────────────────
-function saveHistory(){
-  if(histIdx<history.length-1) history=history.slice(0,histIdx+1);
-  history.push(canvas.toDataURL());
-  histIdx++;
-  if(history.length>50) history.shift();
-}
-function undo(){if(histIdx>0){histIdx--;restoreHistory();}}
-function redo(){if(histIdx<history.length-1){histIdx++;restoreHistory();}}
-function restoreHistory(){
-  const img=new Image();img.onload=()=>{ctx.clearRect(0,0,canvasW,canvasH);ctx.drawImage(img,0,0);};
-  img.src=history[histIdx];
-}
+    setShadow(ctx, 30, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = tc;
+    ctx.font = fontStr('italic', 400, sz);
+    ctx.letterSpacing = ls + 'px';
+    ctx.textAlign = 'center';
+    const th = drawText(ctx, title, W/2, H/2 - 50, 840, sz*1.45);
+    clearShadow(ctx);
 
-// ─── TOOL ─────────────────────────────────────────────
-function setTool(t,btn){
-  tool=t;
-  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  const cursors={select:'default',text:'text',brush:'crosshair',eraser:'cell',shape:'crosshair',fill:'cell'};
-  canvas.style.cursor=cursors[t]||'default';
-}
+    ctx.fillStyle = tc; ctx.globalAlpha = 0.65;
+    ctx.font = fontStr('normal', 300, Math.round(sz*0.40));
+    ctx.letterSpacing = '2px';
+    drawText(ctx, sub.toUpperCase(), W/2, H/2 + th/2 + 80, 720, sz*0.55);
 
-// ─── CANVAS EVENTS ────────────────────────────────────
-canvas.addEventListener('mousedown',onDown);
-canvas.addEventListener('mousemove',onMove);
-canvas.addEventListener('mouseup',onUp);
-canvas.addEventListener('touchstart',e=>{e.preventDefault();onDown(e.touches[0]);},{passive:false});
-canvas.addEventListener('touchmove',e=>{e.preventDefault();onMove(e.touches[0]);},{passive:false});
-canvas.addEventListener('touchend',e=>{e.preventDefault();onUp(e.changedTouches[0]);},{passive:false});
+    ctx.globalAlpha = 0.4;
+    ctx.font = `400 26px 'DM Sans', sans-serif`;
+    ctx.letterSpacing = '3px';
+    ctx.fillText(tag.toUpperCase(), W/2, H - 90);
+    ctx.globalAlpha = 1;
 
-function getCanvasPos(e){
-  const r=canvas.getBoundingClientRect();
-  const scaleX=canvasW/displayW, scaleY=canvasH/displayH;
-  return {x:(e.clientX-r.left)*scaleX, y:(e.clientY-r.top)*scaleY};
-}
+  } else if (tpl === 'editorial') {
+    // Bold editorial asymmetric
+    const px = 110;
+    // Vertical accent bar
+    ctx.save();
+    ctx.globalAlpha = 0.45;
+    const barG = ctx.createLinearGradient(0,0,0,H);
+    barG.addColorStop(0, 'transparent');
+    barG.addColorStop(0.3, tc);
+    barG.addColorStop(0.7, tc);
+    barG.addColorStop(1, 'transparent');
+    ctx.fillStyle = barG;
+    ctx.fillRect(px-30, 0, 3, H);
+    ctx.restore();
 
-function onDown(e){
-  const p=getCanvasPos(e);
-  drawing=true; lastX=p.x; lastY=p.y;
-  if(tool==='fill'){floodFill(Math.round(p.x),Math.round(p.y));saveHistory();drawing=false;return;}
-  if(tool==='text'){promptText(p.x,p.y);drawing=false;return;}
-  if(tool==='shape'){shapeStart={x:p.x,y:p.y};shapeSnap=canvas.toDataURL();return;}
-  if(tool==='brush'||tool==='eraser'){
-    ctx.globalAlpha=opacity;
-    ctx.strokeStyle=tool==='eraser'?'#F5EDE4':currentColor;
-    ctx.lineWidth=tool==='eraser'?brushSize*3:brushSize;
-    ctx.lineCap='round';ctx.lineJoin='round';
-    ctx.beginPath();ctx.moveTo(p.x,p.y);
+    // Category label rotated
+    ctx.save();
+    ctx.translate(px-60, H/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillStyle = tc;
+    ctx.globalAlpha = 0.35;
+    ctx.font = `300 22px 'DM Sans', sans-serif`;
+    ctx.letterSpacing = '5px';
+    ctx.textAlign = 'center';
+    ctx.fillText('PSICOLOGIA & SAÚDE MENTAL', 0, 0);
+    ctx.restore();
+
+    setShadow(ctx, 24, 'rgba(0,0,0,0.25)');
+    ctx.fillStyle = tc; ctx.globalAlpha = 1;
+    ctx.font = fontStr('italic', 400, sz+4);
+    ctx.textAlign = 'left'; ctx.letterSpacing = ls+'px';
+    const th = drawText(ctx, title, px+20, H/2 - 40, 800, (sz+4)*1.4, 'left');
+    clearShadow(ctx);
+
+    ctx.fillStyle = tc; ctx.globalAlpha = 0.6;
+    ctx.font = `300 ${Math.round(sz*0.38)}px 'DM Sans', sans-serif`;
+    ctx.letterSpacing = '1px';
+    drawText(ctx, sub, px+20, H/2 + th/2 + 60, 800, sz*0.52, 'left');
+
+    ctx.globalAlpha = 0.35; ctx.textAlign = 'left';
+    ctx.font = `400 24px 'DM Sans', sans-serif`;
+    ctx.letterSpacing = '3px';
+    ctx.fillText(tag.toUpperCase(), px+20, H-100);
+    ctx.globalAlpha = 1;
+
+  } else if (tpl === 'moldura') {
+    // Luxe double frame
+    const mg = 70;
+    ctx.save();
+    ctx.strokeStyle = tc; ctx.globalAlpha = 0.25; ctx.lineWidth = 2;
+    ctx.strokeRect(mg, mg, W-mg*2, H-mg*2);
+    ctx.globalAlpha = 0.1; ctx.lineWidth = 1;
+    ctx.strokeRect(mg+18, mg+18, W-(mg+18)*2, H-(mg+18)*2);
+    ctx.restore();
+
+    // Corner crosses
+    [[mg+12,mg+12],[W-mg-12,mg+12],[mg+12,H-mg-12],[W-mg-12,H-mg-12]].forEach(([x,y])=>{
+      ctx.save();
+      ctx.strokeStyle=tc; ctx.globalAlpha=0.4; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x-14,y); ctx.lineTo(x+14,y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x,y-14); ctx.lineTo(x,y+14); ctx.stroke();
+      ctx.restore();
+    });
+
+    // Title top small
+    ctx.fillStyle = tc; ctx.globalAlpha = 0.4;
+    ctx.font = `400 22px 'Cinzel', serif`; ctx.textAlign = 'center';
+    ctx.letterSpacing = '6px';
+    ctx.fillText('✦  PSI  ✦', W/2, mg+58);
+
+    setShadow(ctx, 22, 'rgba(0,0,0,0.2)');
+    ctx.fillStyle = tc; ctx.globalAlpha = 1;
+    ctx.font = fontStr('italic', 400, sz);
+    ctx.letterSpacing = ls+'px'; ctx.textAlign='center';
+    const th = drawText(ctx, title, W/2, H/2 - 40, 820, sz*1.42);
+    clearShadow(ctx);
+
+    ctx.globalAlpha = 0.6;
+    ctx.font = fontStr('normal', 300, Math.round(sz*0.38));
+    ctx.letterSpacing = '1px';
+    drawText(ctx, sub, W/2, H/2 + th/2 + 72, 720, sz*0.52);
+
+    ctx.globalAlpha = 0.35; ctx.font=`400 24px 'Cinzel', serif`;
+    ctx.letterSpacing='4px';
+    ctx.fillText(tag.toUpperCase(), W/2, H-mg-40);
+    ctx.globalAlpha = 1;
+
+  } else if (tpl === 'split') {
+    // Diagonal split bg
+    ctx.save();
+    const bg2 = makeBg(ctx, W, H);
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.beginPath();
+    ctx.moveTo(0,0); ctx.lineTo(W,0); ctx.lineTo(W, H*0.42); ctx.lineTo(0, H*0.62);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    // Title on dark area
+    setShadow(ctx, 18, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = tc; ctx.textAlign = 'center';
+    ctx.font = fontStr('italic', 600, sz+8);
+    ctx.letterSpacing = ls+'px';
+    drawText(ctx, title, W/2, H*0.28, 860, (sz+8)*1.38);
+    clearShadow(ctx);
+
+    // Sub on light area
+    ctx.fillStyle = tc; ctx.globalAlpha = 0.75;
+    ctx.font = fontStr('normal', 300, Math.round(sz*0.42));
+    ctx.letterSpacing = '1px';
+    drawText(ctx, sub, W/2, H*0.72, 780, sz*0.56);
+
+    ctx.globalAlpha = 0.4;
+    ctx.font = `300 26px 'DM Sans', sans-serif`;
+    ctx.letterSpacing = '3px';
+    ctx.fillText(tag.toUpperCase(), W/2, H-90);
+    ctx.globalAlpha = 1;
+
+  } else if (tpl === 'minimal') {
+    // Ultra clean light
+    ctx.save();
+    ctx.fillStyle = '#F6EEE3'; ctx.fillRect(0,0,W,H);
+    ctx.restore();
+    // Very fine grid
+    ctx.save(); ctx.globalAlpha = 0.05; ctx.strokeStyle = '#6B3420'; ctx.lineWidth=.5;
+    for(let x=0;x<W;x+=54) { ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
+    for(let y=0;y<H;y+=54) { ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke(); }
+    ctx.restore();
+
+    ctx.fillStyle = '#1A0A02'; ctx.textAlign='center';
+    ctx.font = `600 22px 'Cinzel', serif`; ctx.letterSpacing='6px';
+    ctx.globalAlpha = 0.4;
+    ctx.fillText('SAÚDE MENTAL', W/2, 200);
+    ctx.globalAlpha = 1;
+
+    setShadow(ctx, 0);
+    ctx.font = fontStr('italic', 400, sz);
+    ctx.letterSpacing = ls+'px'; ctx.fillStyle = '#2E1208';
+    const th = drawText(ctx, title, W/2, H/2 - 30, 820, sz*1.42);
+
+    ctx.fillStyle = '#6B3420'; ctx.globalAlpha = 0.65;
+    ctx.font = `300 ${Math.round(sz*0.38)}px 'DM Sans',sans-serif`;
+    ctx.letterSpacing='1px';
+    drawText(ctx, sub, W/2, H/2+th/2+72, 720, sz*0.52);
+
+    ctx.globalAlpha = 0.4; ctx.fillStyle='#8C5235';
+    ctx.font=`400 24px 'DM Sans',sans-serif`; ctx.letterSpacing='3px';
+    ctx.fillText(tag.toUpperCase(), W/2, H-90);
+    ctx.globalAlpha = 1;
+
+  } else if (tpl === 'carrossel') {
+    // Slide numbered layout
+    if (num) {
+      ctx.fillStyle = tc; ctx.globalAlpha = 0.07;
+      ctx.font = `700 320px 'Playfair Display', serif`;
+      ctx.textAlign = 'right'; ctx.letterSpacing='-10px';
+      ctx.fillText(num.split('/')[0]||num, W-50, H/2+120);
+    }
+
+    const px = 100;
+    ctx.globalAlpha = 0.4; ctx.fillStyle = tc;
+    ctx.font = `300 22px 'DM Sans', sans-serif`; ctx.textAlign='left'; ctx.letterSpacing='5px';
+    ctx.fillText('SLIDE ' + (num||'01'), px, 170);
+
+    // Thin accent line
+    ctx.save(); ctx.strokeStyle=tc; ctx.globalAlpha=0.3; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(px, 188); ctx.lineTo(px+200,188); ctx.stroke();
+    ctx.restore();
+
+    ctx.globalAlpha = 1;
+    setShadow(ctx, 20, 'rgba(0,0,0,0.2)');
+    ctx.fillStyle = tc;
+    ctx.font = fontStr('italic', 400, sz);
+    ctx.textAlign = 'left'; ctx.letterSpacing = ls+'px';
+    const th = drawText(ctx, title, px, H/2 - 20, 840, sz*1.42, 'left');
+    clearShadow(ctx);
+
+    ctx.fillStyle = tc; ctx.globalAlpha = 0.65;
+    ctx.font = `300 ${Math.round(sz*0.4)}px 'DM Sans',sans-serif`;
+    ctx.letterSpacing='1px';
+    drawText(ctx, sub, px, H/2+th/2+70, 840, sz*0.54, 'left');
+
+    ctx.globalAlpha = 0.35; ctx.textAlign='left';
+    ctx.font=`400 24px 'DM Sans',sans-serif`; ctx.letterSpacing='3px';
+    ctx.fillText(tag.toUpperCase(), px, H-90);
+    ctx.globalAlpha = 1;
+
+  } else if (tpl === 'botanico') {
+    // Large botanical decorations + text
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.font = '280px serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('🌿', W+40, 380);
+    ctx.globalAlpha = 0.12;
+    ctx.font = '220px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('🌸', -40, H-60);
+    ctx.restore();
+
+    ctx.fillStyle = tc; ctx.textAlign = 'center';
+    ctx.globalAlpha = 0.5;
+    ctx.font = `400 28px 'Cinzel', serif`; ctx.letterSpacing='5px';
+    ctx.fillText('✦  ✦  ✦', W/2, 180);
+    ctx.globalAlpha = 1;
+
+    setShadow(ctx, 24, 'rgba(0,0,0,0.25)');
+    ctx.fillStyle = tc;
+    ctx.font = fontStr('italic', 400, sz);
+    ctx.letterSpacing = ls+'px';
+    const th = drawText(ctx, title, W/2, H/2 - 40, 840, sz*1.45);
+    clearShadow(ctx);
+
+    ctx.fillStyle = tc; ctx.globalAlpha = 0.65;
+    ctx.font = fontStr('normal', 300, Math.round(sz*0.4));
+    ctx.letterSpacing='1px';
+    drawText(ctx, sub, W/2, H/2+th/2+75, 720, sz*0.54);
+
+    ctx.globalAlpha = 0.35;
+    ctx.font=`400 24px 'DM Sans',sans-serif`; ctx.letterSpacing='3px';
+    ctx.fillText(tag.toUpperCase(), W/2, H-90);
+    ctx.globalAlpha=1;
+
+  } else if (tpl === 'noturno') {
+    // Moody dark with glow
+    // Glow center
+    ctx.save();
+    const glow = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,420);
+    glow.addColorStop(0, 'rgba(176,120,72,.12)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
+    ctx.restore();
+
+    // Stars
+    ctx.save(); ctx.fillStyle='#EDD8BA';
+    for(let i=0;i<60;i++) {
+      ctx.globalAlpha = Math.random()*0.5+0.1;
+      const x=Math.random()*W, y=Math.random()*H, r=Math.random()*1.5+0.5;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.fillStyle = '#EDD8BA'; ctx.textAlign='center';
+    ctx.globalAlpha = 0.45;
+    ctx.font=`400 30px 'Cinzel',serif`; ctx.letterSpacing='6px';
+    ctx.fillText('✦  ✦  ✦', W/2, 180);
+    ctx.globalAlpha=1;
+
+    ctx.fillStyle = '#EDD8BA';
+    ctx.shadowColor = 'rgba(201,153,106,0.5)'; ctx.shadowBlur=40;
+    ctx.font = fontStr('italic', 400, sz);
+    ctx.letterSpacing = ls+'px';
+    const th = drawText(ctx, title, W/2, H/2-40, 820, sz*1.45);
+    clearShadow(ctx);
+
+    ctx.fillStyle='#C9996A'; ctx.globalAlpha=0.75;
+    ctx.font=fontStr('normal',300,Math.round(sz*0.4));
+    ctx.letterSpacing='1px';
+    drawText(ctx, sub, W/2, H/2+th/2+75, 720, sz*0.54);
+
+    ctx.globalAlpha=0.35; ctx.fillStyle='#EDD8BA';
+    ctx.font=`300 24px 'DM Sans',sans-serif`; ctx.letterSpacing='4px';
+    ctx.fillText(tag.toUpperCase(), W/2, H-90);
+    ctx.globalAlpha=1;
   }
-}
-function onMove(e){
-  if(!drawing)return;
-  const p=getCanvasPos(e);
-  if(tool==='brush'||tool==='eraser'){ctx.lineTo(p.x,p.y);ctx.stroke();}
-  if(tool==='shape'&&shapeStart){
-    const img=new Image();img.onload=()=>{
-      ctx.clearRect(0,0,canvasW,canvasH);ctx.drawImage(img,0,0);
-      ctx.globalAlpha=opacity;ctx.strokeStyle=currentColor;ctx.fillStyle=currentColor;ctx.lineWidth=brushSize;
-      drawShape(shapeStart.x,shapeStart.y,p.x,p.y);
-    };img.src=shapeSnap;
-  }
-  lastX=p.x;lastY=p.y;
-}
-function onUp(e){
-  if(drawing){
-    drawing=false;ctx.globalAlpha=1;
-    if(tool!=='fill'&&tool!=='text')saveHistory();
-  }
-  shapeStart=null;shapeSnap=null;
+
+  // Save to feed slot
+  feedSlots[activeSlot] = canvas.toDataURL('image/jpeg', 0.85);
+  renderFeed();
 }
 
-function drawShape(x1,y1,x2,y2){
-  const w=x2-x1,h=y2-y1;
-  ctx.beginPath();
-  if(shapeMode==='rect'){ctx.rect(x1,y1,w,h);}
-  else if(shapeMode==='circle'){ctx.ellipse(x1+w/2,y1+h/2,Math.abs(w/2),Math.abs(h/2),0,0,Math.PI*2);}
-  else if(shapeMode==='line'){ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);}
-  else if(shapeMode==='triangle'){ctx.moveTo(x1+w/2,y1);ctx.lineTo(x2,y2);ctx.lineTo(x1,y2);ctx.closePath();}
-  ctx.stroke();
+function scheduleRender() {
+  clearTimeout(renderTimer);
+  renderTimer = setTimeout(render, 60);
 }
 
-// ─── TEXT ─────────────────────────────────────────────
-function promptText(x,y){
-  const txt=document.getElementById('txt-input')?.value||'Seu texto';
-  applyText(txt,x,y);
-}
-
-function applyText(txt,x,y){
-  if(!txt.trim())return;
-  ctx.globalAlpha=opacity;
-  ctx.fillStyle=currentColor;
-  ctx.font=`${fontStyle} ${fontWeight} ${fontSize}px ${currentFont}`;
-  ctx.textAlign=textAlign;
-  ctx.textBaseline='middle';
-  // Multi-line
-  const words=txt.split('\n');
-  words.forEach((line,i)=>{ctx.fillText(line,x,y+i*(fontSize*1.3));});
-  ctx.globalAlpha=1;
-  saveHistory();
-}
-
-function addTextFromPanel(){
-  const txt=document.getElementById('txt-input')?.value||'Seu texto';
-  const x=canvasW/2, y=canvasH/2;
-  applyText(txt,x,y);
-}
-
-// ─── FILL ─────────────────────────────────────────────
-function floodFill(sx,sy){
-  const imgData=ctx.getImageData(0,0,canvasW,canvasH);
-  const d=imgData.data;
-  const idx=(x,y)=>(y*canvasW+x)*4;
-  const ti=idx(sx,sy);
-  const tr=d[ti],tg=d[ti+1],tb=d[ti+2];
-  const c=hexToRgb(currentColor);
-  if(tr===c.r&&tg===c.g&&tb===c.b)return;
-  const stack=[[sx,sy]];
-  while(stack.length){
-    const[x,y]=stack.pop();
-    if(x<0||x>=canvasW||y<0||y>=canvasH)continue;
-    const i=idx(x,y);
-    if(d[i]!==tr||d[i+1]!==tg||d[i+2]!==tb)continue;
-    d[i]=c.r;d[i+1]=c.g;d[i+2]=c.b;d[i+3]=Math.round(opacity*255);
-    stack.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]);
-  }
-  ctx.putImageData(imgData,0,0);
-}
-function hexToRgb(h){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return{r,g,b};}
-
-// ─── ZOOM ─────────────────────────────────────────────
-function zoom(delta){
-  const area=document.getElementById('canvas-area');
-  const maxW=area.clientWidth-40,maxH=area.clientHeight-80;
-  const baseScale=Math.min(maxW/canvasW,maxH/canvasH,1);
-  const scales=[0.25,0.33,0.5,0.67,0.75,1,1.25,1.5,2];
-  const cur=displayW/(canvasW*baseScale);
-  let ni=scales.findIndex(s=>s>=cur)+(delta>0?0:-1);
-  ni=Math.max(0,Math.min(scales.length-1,ni+(delta>0?1:-1)));
-  const ns=scales[ni];
-  displayW=Math.round(canvasW*baseScale*ns);
-  displayH=Math.round(canvasH*baseScale*ns);
-  canvas.style.width=displayW+'px';
-  canvas.style.height=displayH+'px';
-  document.getElementById('canvas-wrapper').style.width=displayW+'px';
-  document.getElementById('canvas-wrapper').style.height=displayH+'px';
-  document.getElementById('zoomLabel').textContent=Math.round(ns*100)+'%';
-}
-
-// ─── FILTERS ──────────────────────────────────────────
-function applyFilter(name){
-  currentFilter=name;
-  const imgData=ctx.getImageData(0,0,canvasW,canvasH);
-  const d=imgData.data;
-  for(let i=0;i<d.length;i+=4){
-    let r=d[i],g=d[i+1],b=d[i+2];
-    if(name==='sepia'){d[i]=Math.min(255,r*.393+g*.769+b*.189);d[i+1]=Math.min(255,r*.349+g*.686+b*.168);d[i+2]=Math.min(255,r*.272+g*.534+b*.131);}
-    else if(name==='warm'){d[i]=Math.min(255,r*1.1);d[i+1]=Math.min(255,g*1.02);d[i+2]=Math.max(0,b*.9);}
-    else if(name==='mocha'){d[i]=Math.min(255,r*.8+50);d[i+1]=Math.min(255,g*.7+30);d[i+2]=Math.max(0,b*.6+10);}
-    else if(name==='fade'){d[i]=r*.8+40;d[i+1]=g*.8+40;d[i+2]=b*.8+40;}
-    else if(name==='contrast'){const f=259*(100+70)/(255*(259-70));d[i]=Math.min(255,Math.max(0,f*(r-128)+128));d[i+1]=Math.min(255,Math.max(0,f*(g-128)+128));d[i+2]=Math.min(255,Math.max(0,f*(b-128)+128));}
-  }
-  ctx.putImageData(imgData,0,0);
-  saveHistory();
-}
-
-function filterPreview(c,name){
-  const imgData=ctx.getImageData(0,0,Math.min(canvasW,100),Math.min(canvasH,100));
-  const d=new Uint8ClampedArray(imgData.data);
-  for(let i=0;i<d.length;i+=4){
-    let r=d[i],g=d[i+1],b=d[i+2];
-    if(name==='sepia'){d[i]=Math.min(255,r*.393+g*.769+b*.189);d[i+1]=Math.min(255,r*.349+g*.686+b*.168);d[i+2]=Math.min(255,r*.272+g*.534+b*.131);}
-    else if(name==='warm'){d[i]=Math.min(255,r*1.1);d[i+1]=Math.min(255,g*1.02);d[i+2]=Math.max(0,b*.9);}
-    else if(name==='mocha'){d[i]=Math.min(255,r*.8+50);d[i+1]=Math.min(255,g*.7+30);d[i+2]=Math.max(0,b*.6+10);}
-    else if(name==='fade'){d[i]=r*.8+40;d[i+1]=g*.8+40;d[i+2]=b*.8+40;}
-  }
-  c.putImageData(new ImageData(d,imgData.width,imgData.height),0,0);
-}
-
-// ─── CLEAR ────────────────────────────────────────────
-function clearAll(){
-  ctx.fillStyle='#F5EDE4';ctx.fillRect(0,0,canvasW,canvasH);
-  saveHistory();
-}
-
-// ─── GRADIENT BG ──────────────────────────────────────
-function applyGradient(stops){
-  const g=ctx.createLinearGradient(0,0,canvasW,canvasH);
-  g.addColorStop(0,stops[0]);g.addColorStop(1,stops[1]);
-  ctx.fillStyle=g;ctx.fillRect(0,0,canvasW,canvasH);
-  saveHistory();
-}
-
-// ─── TEMPLATES ────────────────────────────────────────
-function applyTemplate(fn){fn(ctx,canvasW,canvasH);saveHistory();}
-
-function drawTplQuote(c,W,H){
-  c.fillStyle='#5C2A1A';c.fillRect(0,0,W,H);
-  c.fillStyle='rgba(255,255,255,.06)';c.fillRect(W*.08,H*.08,W*.84,H*.84);
-  c.strokeStyle='rgba(196,149,122,.4)';c.lineWidth=2;c.strokeRect(W*.06,H*.06,W*.88,H*.88);
-  c.fillStyle='rgba(196,149,122,.3)';c.fillRect(W*.1,H*.46,W*.8,1);
-  c.fillStyle='#E8D5C4';c.font=`italic 400 ${W*.18}px 'Cormorant Garamond',serif`;c.textAlign='center';c.fillText('\u201C',W*.5,H*.32);
-  c.fillStyle='#F5EDE4';c.font=`italic 300 ${W*.042}px 'Cormorant Garamond',serif`;c.textAlign='center';
-  wrapText(c,'"Cuidar de si mesma é\num ato de coragem."',W*.5,H*.47,W*.7,W*.055);
-  c.fillStyle='#C4957A';c.font=`300 ${W*.024}px 'Raleway',sans-serif`;c.fillText('— @suapsicologia',W*.5,H*.65);
-  c.fillStyle='rgba(196,149,122,.5)';c.fillRect(W*.4,H*.72,W*.2,1);
-  c.fillStyle='#8B5E52';c.font=`300 ${W*.018}px 'Raleway',sans-serif`;c.fillText('PSICOLOGIA | SAÚDE FEMININA',W*.5,H*.82);
-}
-function drawTplTip(c,W,H){
-  c.fillStyle='#F5EDE4';c.fillRect(0,0,W,H);
-  c.fillStyle='#6B3A2A';c.fillRect(0,0,W,H*.12);
-  c.fillStyle='#F5EDE4';c.font=`600 ${W*.032}px 'Cinzel',serif`;c.textAlign='center';c.fillText('DICA DE SAÚDE MENTAL',W*.5,H*.077);
-  c.fillStyle='#6B3A2A';c.font=`400 ${W*.072}px 'Cormorant Garamond',serif`;c.fillText('01',W*.5,H*.28);
-  c.strokeStyle='#C4957A';c.lineWidth=3;c.strokeRect(W*.12,H*.32,W*.76,H*.44);
-  c.fillStyle='#3D1A0F';c.font=`italic 300 ${W*.042}px 'Lora',serif`;
-  wrapText(c,'Respeite o tempo\ndo seu processo.',W*.5,H*.5,W*.65,W*.052);
-  c.fillStyle='#8B5E52';c.font=`300 ${W*.022}px 'Raleway',sans-serif`;c.fillText('@suapsicologia',W*.5,H*.84);
-  c.fillStyle='#C4957A';c.fillRect(W*.35,H*.9,W*.3,1.5);
-}
-function drawTplAbout(c,W,H){
-  c.fillStyle='#2A1208';c.fillRect(0,0,W,H);
-  const g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'#3D1A0F');g.addColorStop(1,'#1A0A04');
-  c.fillStyle=g;c.fillRect(0,0,W,H);
-  c.strokeStyle='rgba(196,149,122,.3)';c.lineWidth=2;c.strokeRect(W*.06,H*.06,W*.88,H*.88);
-  c.fillStyle='#6B3A2A';c.beginPath();c.arc(W*.5,H*.32,W*.18,0,Math.PI*2);c.fill();
-  c.strokeStyle='#C4957A';c.lineWidth=3;c.stroke();
-  c.fillStyle='rgba(196,149,122,.2)';c.beginPath();c.arc(W*.5,H*.32,W*.21,0,Math.PI*2);c.stroke();
-  c.fillStyle='#F5EDE4';c.font=`600 ${W*.044}px 'Cinzel',serif`;c.textAlign='center';c.fillText('PSICÓLOGA',W*.5,H*.6);
-  c.fillStyle='#C4957A';c.fillRect(W*.25,H*.65,W*.5,1.5);
-  c.fillStyle='#C4957A';c.font=`300 ${W*.024}px 'Raleway',sans-serif`;c.fillText('Especialista em Saúde da Mulher',W*.5,H*.72);
-  c.fillStyle='#8B5E52';c.font=`300 ${W*.018}px 'Raleway',sans-serif`;c.fillText('CRP 00/000000  |  @suapsicologia',W*.5,H*.84);
-}
-function drawTplCta(c,W,H){
-  c.fillStyle='#C4957A';c.fillRect(0,0,W,H);
-  c.fillStyle='rgba(107,58,42,.6)';
-  for(let i=0;i<H;i+=W*.04){c.fillRect(0,i,W,W*.005);}
-  c.fillStyle='rgba(245,237,228,.15)';c.fillRect(W*.1,H*.35,W*.8,H*.3);
-  c.fillStyle='#2A1208';c.font=`600 ${W*.048}px 'Cinzel',serif`;c.textAlign='center';c.fillText('AGENDE SUA CONSULTA',W*.5,H*.44);
-  c.fillStyle='#3D1A0F';c.font=`300 ${W*.026}px 'Raleway',sans-serif`;c.fillText('Cuidado especializado para mulheres',W*.5,H*.52);
-  c.fillStyle='#2A1208';c.fillRect(W*.3,H*.63,W*.4,W*.07);
-  c.fillStyle='#F5EDE4';c.font=`500 ${W*.024}px 'Raleway',sans-serif`;c.fillText('SAIBA MAIS',W*.5,H*.668);
-  c.fillStyle='rgba(42,18,8,.5)';c.font=`300 ${W*.018}px 'Raleway',sans-serif`;c.fillText('@suapsicologia',W*.5,H*.85);
-}
-function drawTplLinen(c,W,H){
-  c.fillStyle='#E8D5C4';c.fillRect(0,0,W,H);
-  for(let i=0;i<H;i+=4){c.fillStyle=`rgba(139,94,82,${Math.random()*.07+.02})`;c.fillRect(0,i,W,1);}
-  for(let i=0;i<W;i+=6){c.fillStyle=`rgba(139,94,82,${Math.random()*.04+.01})`;c.fillRect(i,0,1,H);}
-  c.fillStyle='rgba(107,58,42,.08)';c.fillRect(W*.06,H*.06,W*.88,H*.88);
-  c.strokeStyle='rgba(107,58,42,.2)';c.lineWidth=2;c.strokeRect(W*.06,H*.06,W*.88,H*.88);
-  c.fillStyle='rgba(107,58,42,.12)';c.fillRect(W*.12,H*.45,W*.76,2);
-}
-function drawTplWater(c,W,H){
-  const g=c.createLinearGradient(0,0,W*.5,H);
-  g.addColorStop(0,'#F0E6DC');g.addColorStop(.4,'#C4957A');g.addColorStop(.8,'#8B5E52');g.addColorStop(1,'#5C2A1A');
-  c.fillStyle=g;c.fillRect(0,0,W,H);
-  c.globalAlpha=.3;
-  for(let i=0;i<12;i++){
-    c.beginPath();c.arc(Math.random()*W,Math.random()*H,Math.random()*W*.25+W*.05,0,Math.PI*2);
-    c.fillStyle=['#E8D5C4','#D4A898','#B08070'][Math.floor(Math.random()*3)];c.fill();
-  }
-  c.globalAlpha=1;
-}
-
-function wrapText(c,text,x,y,maxW,lineH){
-  const lines=text.split('\n');
-  lines.forEach((line,li)=>{
-    const words=line.split(' ');let l='';
-    const rows=[];
-    words.forEach(w=>{const t=l?l+' '+w:w;if(c.measureText(t).width>maxW&&l){rows.push(l);l=w;}else l=t;});
-    rows.push(l);
-    rows.forEach((r,ri)=>c.fillText(r,x,y+(li*rows.length+ri)*lineH));
+/* ═══════════════════════════════════════════
+   TEMPLATE THUMBNAILS
+═══════════════════════════════════════════ */
+function buildTemplateList() {
+  const list = document.getElementById('tpl-list');
+  list.innerHTML = '';
+  TEMPLATES.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tpl-item' + (t.id===S.tpl?' active':'');
+    el.dataset.id = t.id;
+    el.innerHTML = `
+      <div class="tpl-thumb">
+        <canvas id="thumb-${t.id}" width="400" height="140"></canvas>
+      </div>
+      <div class="tpl-meta">
+        <span class="tpl-name">${t.name}</span>
+        <span class="tpl-tag">${t.tag}</span>
+      </div>
+      <div class="tpl-active-dot"></div>`;
+    el.onclick = () => {
+      S.tpl = t.id;
+      if(t.defaultBg) { S.bg = t.defaultBg; highlightSwatch('sw-bg', t.defaultBg); }
+      document.querySelectorAll('.tpl-item').forEach(x=>x.classList.remove('active'));
+      el.classList.add('active');
+      render();
+    };
+    list.appendChild(el);
+    renderThumb(t);
   });
 }
 
-// ─── EXPORT ───────────────────────────────────────────
-function exportPNG(){
-  const a=document.createElement('a');a.download=`post-${canvasW}x${canvasH}.png`;
-  a.href=canvas.toDataURL('image/png');a.click();toast('PNG exportado com sucesso');
-}
-function exportJPG(){
-  const a=document.createElement('a');a.download=`post-${canvasW}x${canvasH}.jpg`;
-  a.href=canvas.toDataURL('image/jpeg',0.95);a.click();toast('JPG exportado com sucesso');
-}
-function exportSVG(){
-  const s=`<svg xmlns="http://www.w3.org/2000/svg" width="${canvasW}" height="${canvasH}"><image href="${canvas.toDataURL()}" width="${canvasW}" height="${canvasH}"/></svg>`;
-  const b=new Blob([s],{type:'image/svg+xml'});
-  const a=document.createElement('a');a.download='post.svg';a.href=URL.createObjectURL(b);a.click();
-  toast('SVG exportado');
-}
-function exportPaletteCss(){
-  const names=['mogno','cacau','terracota','cobre','argila','sienna','rosa-antigo','pessego','quartzo','areia','creme','leite','branco-quente','ebano','caramelo','ambar'];
-  const css=`/* Paleta Studio Psi */\n:root {\n${palette.slice(0,16).map((h,i)=>`  --psi-${names[i]||'cor-'+i}: ${h};`).join('\n')}\n}`;
-  const b=new Blob([css],{type:'text/css'});
-  const a=document.createElement('a');a.download='paleta-psi.css';a.href=URL.createObjectURL(b);a.click();
-  toast('Paleta CSS exportada');
-}
-function showExport(){rightTab('exportar',document.querySelector('.rptab:last-child'));}
-
-// ─── TOAST ────────────────────────────────────────────
-function toast(msg){
-  let t=document.getElementById('_toast');
-  if(!t){t=document.createElement('div');t.id='_toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#3D1A0F;color:#F5EDE4;padding:10px 20px;border-radius:100px;font-size:12px;font-family:"DM Sans",sans-serif;z-index:9999;opacity:0;transition:opacity .3s;border:1px solid rgba(196,149,122,.4);';document.body.appendChild(t);}
-  t.textContent=msg;t.style.opacity='1';
-  clearTimeout(t._tid);t._tid=setTimeout(()=>t.style.opacity='0',2500);
+function renderThumb(t) {
+  const tc = document.getElementById('thumb-'+t.id);
+  if(!tc) return;
+  const c = tc.getContext('2d');
+  const W=400, H=140;
+  const gradMap = {
+    'g-warm':    [['#4A1E0F',0],['#C9996A',1]],
+    'g-deep':    [['#1A0A02',0],['#6B3420',1]],
+    'g-caramel': [['#8C5235',0],['#EDD8BA',1]],
+    'g-mocha':   [['#2E1208',0],['#8C5235',1]],
+    'g-sand':    [['#C9996A',0],['#F6EEE3',1]],
+  };
+  const bg = t.defaultBg;
+  if(gradMap[bg]) {
+    const g=c.createLinearGradient(0,0,W,H);
+    gradMap[bg].forEach(([col,p])=>g.addColorStop(p,col));
+    c.fillStyle=g;
+  } else c.fillStyle=bg||'#4A1E0F';
+  c.fillRect(0,0,W,H);
+  // tiny label
+  c.fillStyle='rgba(255,255,255,0.6)';
+  c.font=`italic 22px 'Playfair Display',serif`;
+  c.textAlign='center';
+  c.fillText(t.name, W/2, H/2+8);
 }
 
-// ─── LEFT PANEL ───────────────────────────────────────
-function leftTab(id,btn){
-  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  buildLeftPanel(id);
-}
+/* ═══════════════════════════════════════════
+   FEED
+═══════════════════════════════════════════ */
+function renderFeed() {
+  const grid = document.getElementById('ig-grid');
+  // Update handle display
+  const tag = document.getElementById('f-tag').value;
+  document.getElementById('ig-handle-display').textContent = tag || '@seunome.psi';
 
-function buildLeftPanel(id){
-  const body=document.getElementById('left-body');
-  if(id==='templates'){
-    body.innerHTML='<div class="section-title">Templates prontos</div><div class="tpl-grid" id="tpl-grid"></div>';
-    const grid=document.getElementById('tpl-grid');
-    templates.forEach((t,i)=>{
-      const card=document.createElement('div');card.className='tpl-card';
-      const mini=document.createElement('canvas');mini.width=200;mini.height=267;
-      t.fn(mini.getContext('2d'),200,267);
-      mini.style.cssText='width:100%;height:100%;display:block;';
-      const lbl=document.createElement('div');lbl.className='tpl-name';lbl.textContent=t.name;
-      card.appendChild(mini);card.appendChild(lbl);
-      card.onclick=()=>applyTemplate(t.fn);
-      grid.appendChild(card);
-    });
-  } else if(id==='elements'){
-    body.innerHTML=`<div class="section-title">Formas</div>
-    <div class="elements-grid">
-      <div class="el-btn" onclick="shapeMode='rect';setTool('shape',null)"><div style="width:22px;height:18px;border:2px solid #C4957A;"></div><span>Retângulo</span></div>
-      <div class="el-btn" onclick="shapeMode='circle';setTool('shape',null)"><div style="width:20px;height:20px;border:2px solid #C4957A;border-radius:50%;"></div><span>Círculo</span></div>
-      <div class="el-btn" onclick="shapeMode='line';setTool('shape',null)"><div style="width:22px;height:2px;background:#C4957A;margin:10px 0;"></div><span>Linha</span></div>
-      <div class="el-btn" onclick="shapeMode='triangle';setTool('shape',null)"><div style="width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-bottom:18px solid #C4957A;"></div><span>Triângulo</span></div>
-      <div class="el-btn" onclick="addDecorLine()"><div style="border-top:2px solid #C4957A;border-bottom:1px solid #C4957A;width:22px;height:6px;margin:8px 0;"></div><span>Ornamento</span></div>
-      <div class="el-btn" onclick="addCircleDecor()"><div style="width:20px;height:20px;border-radius:50%;background:rgba(196,149,122,.3);border:2px solid #C4957A;"></div><span>Círculo deco</span></div>
-    </div>
-    <div class="section-title" style="margin-top:12px;">Fundos degradê</div>
-    <div class="gradient-presets" id="grad-presets"></div>
-    <button class="add-btn" onclick="addSolidBg()" style="margin-bottom:8px;">Aplicar cor sólida</button>
-    <div class="section-title">Padrões</div>
-    <div class="elements-grid">
-      <div class="el-btn" onclick="addPattern('dots')"><div style="display:grid;grid-template-columns:repeat(3,5px);gap:2px;">${'<div style="width:5px;height:5px;border-radius:50%;background:#C4957A"></div>'.repeat(9)}</div><span>Pontos</span></div>
-      <div class="el-btn" onclick="addPattern('lines')"><div style="display:flex;flex-direction:column;gap:3px;">${'<div style="width:22px;height:1px;background:#C4957A"></div>'.repeat(5)}</div><span>Linhas</span></div>
-      <div class="el-btn" onclick="addPattern('grain')"><div style="width:22px;height:22px;background:repeating-conic-gradient(#C4957A 0% 25%, #8B5E52 0% 50%) 0 0/4px 4px;"></div><span>Grão</span></div>
-    </div>`;
-    const gp=document.getElementById('grad-presets');
-    gradients.forEach(g=>{
-      const pill=document.createElement('div');pill.className='grad-pill';
-      pill.style.background=`linear-gradient(135deg,${g.stops[0]},${g.stops[1]})`;
-      pill.title=g.name;
-      pill.onclick=()=>applyGradient(g.stops);
-      gp.appendChild(pill);
-    });
-  } else if(id==='stickers'){
-    body.innerHTML='<div class="section-title">Inserir texto rápido</div><div class="sticker-grid" id="sticker-grid"></div>';
-    const sg=document.getElementById('sticker-grid');
-    stickers.forEach(s=>{
-      const btn=document.createElement('div');btn.className='sticker-btn';
-      btn.style.fontFamily=s.font;btn.style.fontStyle=s.style;
-      btn.textContent=s.label;
-      btn.onclick=()=>{
-        currentFont=s.font;fontSize=s.size;fontStyle=s.style;
-        ctx.globalAlpha=opacity;ctx.fillStyle=currentColor;
-        ctx.font=`${s.style} ${fontWeight} ${s.size}px ${s.font}`;
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillText(s.text,canvasW/2,canvasH/2);
-        ctx.globalAlpha=1;saveHistory();toast('Texto adicionado');
-      };
-      sg.appendChild(btn);
-    });
+  grid.innerHTML = '';
+  for(let i=0; i<9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'ig-cell' + (i===activeSlot?' slot-active':'');
+    cell.onclick = () => { activeSlot=i; renderFeed(); };
+    if(feedSlots[i]) {
+      const img = document.createElement('img');
+      img.src = feedSlots[i]; img.alt='';
+      cell.appendChild(img);
+    } else {
+      cell.innerHTML = '<div class="empty-slot">+</div>';
+    }
+    grid.appendChild(cell);
   }
+  document.getElementById('slot-info').textContent = `Post ${activeSlot+1} de 9`;
 }
 
-function addDecorLine(){
-  ctx.strokeStyle=currentColor;ctx.lineWidth=3;
-  ctx.beginPath();ctx.moveTo(canvasW*.2,canvasH*.5);ctx.lineTo(canvasW*.8,canvasH*.5);ctx.stroke();
-  ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(canvasW*.2,canvasH*.5+8);ctx.lineTo(canvasW*.8,canvasH*.5+8);ctx.stroke();
-  saveHistory();
-}
-function addCircleDecor(){
-  ctx.strokeStyle=currentColor;ctx.lineWidth=3;ctx.globalAlpha=0.4;
-  ctx.beginPath();ctx.arc(canvasW*.5,canvasH*.5,canvasW*.2,0,Math.PI*2);ctx.stroke();
-  ctx.globalAlpha=0.15;ctx.fillStyle=currentColor;ctx.fill();ctx.globalAlpha=1;saveHistory();
-}
-function addSolidBg(){ctx.fillStyle=currentColor;ctx.fillRect(0,0,canvasW,canvasH);saveHistory();}
-function addPattern(type){
-  ctx.globalAlpha=0.15;
-  if(type==='dots'){for(let x=20;x<canvasW;x+=40)for(let y=20;y<canvasH;y+=40){ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=currentColor;ctx.fill();}}
-  else if(type==='lines'){ctx.strokeStyle=currentColor;ctx.lineWidth=1;for(let y=30;y<canvasH;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvasW,y);ctx.stroke();}}
-  else if(type==='grain'){for(let i=0;i<canvasW*canvasH*.05;i++){const x=Math.random()*canvasW,y=Math.random()*canvasH;ctx.fillStyle=currentColor;ctx.fillRect(x,y,2,2);}}
-  ctx.globalAlpha=1;saveHistory();
+function prevSlot() { activeSlot = Math.max(0, activeSlot-1); renderFeed(); }
+function nextSlot() {
+  activeSlot = Math.min(8, activeSlot+1);
+  // auto-apply current post to new slot
+  feedSlots[activeSlot] = feedSlots[activeSlot] || canvas.toDataURL('image/jpeg',.85);
+  renderFeed();
 }
 
-// ─── RIGHT PANEL ──────────────────────────────────────
-function rightTab(id,btn){
-  document.querySelectorAll('.rptab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  buildRightPanel(id);
+/* ═══════════════════════════════════════════
+   SETTERS
+═══════════════════════════════════════════ */
+function setBg(v, el) { S.bg=v; highlightSwatch('sw-bg',v); scheduleRender(); }
+function setTxt(v, el) { S.txt=v; highlightSwatch('sw-txt',v); scheduleRender(); }
+function setFont(f, el) {
+  S.font=f;
+  document.querySelectorAll('.font-opt').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  scheduleRender();
+}
+function setPat(p, el) {
+  S.pat=p;
+  document.querySelectorAll('.pattern-opt').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  scheduleRender();
+}
+function setOrn(o, el) {
+  S.orn=o;
+  document.querySelectorAll('[data-o]').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  scheduleRender();
+}
+function highlightSwatch(id, v) {
+  document.querySelectorAll(`#${id} .sw`).forEach(s => s.classList.toggle('active', s.dataset.v===v));
 }
 
-function buildRightPanel(id){
-  const body=document.getElementById('right-body');
-  if(id==='cor'){
-    body.innerHTML=`
-      <div class="section-title">Paleta de cores</div>
-      <div class="palette-row" id="pal-row"></div>
-      <div class="custom-color-row">
-        <input type="color" id="customColor" value="#6B3A2A" oninput="setColor(this.value)">
-        <span id="colorHex">#6B3A2A — Terracota</span>
-      </div>
-      <div class="divider"></div>
-      <div class="section-title">Propriedades do pincel</div>
-      <div class="prop-row">
-        <label>Tamanho <span class="prop-val" id="sizeVal">8px</span></label>
-        <input type="range" min="1" max="80" value="8" oninput="brushSize=+this.value;document.getElementById('sizeVal').textContent=this.value+'px'">
-      </div>
-      <div class="prop-row">
-        <label>Opacidade <span class="prop-val" id="opacVal">100%</span></label>
-        <input type="range" min="5" max="100" value="100" oninput="opacity=this.value/100;document.getElementById('opacVal').textContent=this.value+'%'">
-      </div>
-      <div class="divider"></div>
-      <div class="sub-title">Fundos degradê rápidos</div>
-      <div class="gradient-presets" id="rgrad"></div>`;
-    const pr=document.getElementById('pal-row');
-    palette.forEach(h=>{
-      const s=document.createElement('div');s.className='color-swatch'+(h===currentColor?' active':'');
-      s.style.background=h;s.title=h;
-      s.onclick=()=>{setColor(h);document.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('active'));s.classList.add('active');};
-      pr.appendChild(s);
-    });
-    const rg=document.getElementById('rgrad');
-    gradients.forEach(g=>{
-      const pill=document.createElement('div');pill.className='grad-pill';
-      pill.style.background=`linear-gradient(135deg,${g.stops[0]},${g.stops[1]})`;
-      pill.title=g.name;pill.onclick=()=>applyGradient(g.stops);
-      rg.appendChild(pill);
-    });
-  } else if(id==='texto'){
-    body.innerHTML=`
-      <div class="section-title">Conteúdo</div>
-      <textarea class="text-area-input" id="txt-input" rows="4" placeholder="Digite seu texto aqui...&#10;Use Enter para nova linha"></textarea>
-      <button class="add-btn" onclick="addTextFromPanel()">Adicionar ao centro</button>
-      <div class="divider"></div>
-      <div class="section-title">Fonte</div>
-      <select class="font-select" id="font-sel" onchange="currentFont=this.value">
-        ${fonts.map(f=>`<option value="${f.value}" style="font-family:${f.value}">${f.label}</option>`).join('')}
-      </select>
-      <div class="prop-row">
-        <label>Tamanho <span class="prop-val" id="fsizeVal">48px</span></label>
-        <input type="range" min="12" max="200" value="48" oninput="fontSize=+this.value;document.getElementById('fsizeVal').textContent=this.value+'px'">
-      </div>
-      <div class="section-title">Alinhamento</div>
-      <div class="align-row">
-        <button class="align-btn" onclick="textAlign='left';setActiveAlign(this)">≡ Esq</button>
-        <button class="align-btn active" onclick="textAlign='center';setActiveAlign(this)">≡ Centro</button>
-        <button class="align-btn" onclick="textAlign='right';setActiveAlign(this)">≡ Dir</button>
-      </div>
-      <div class="section-title">Estilo</div>
-      <div class="style-row">
-        <button class="style-btn" onclick="toggleBold(this)"><b>N</b></button>
-        <button class="style-btn" onclick="toggleItalic(this)"><i>I</i></button>
-        <button class="style-btn" onclick="addTextOutline()">Contorno</button>
-        <button class="style-btn" onclick="addTextShadow()">Sombra</button>
-      </div>`;
-  } else if(id==='filtros'){
-    const filterList=[{n:'Original',key:'none'},{n:'Sépia',key:'sepia'},{n:'Quente',key:'warm'},{n:'Mocha',key:'mocha'},{n:'Fade',key:'fade'},{n:'Contraste',key:'contrast'}];
-    body.innerHTML=`<div class="section-title">Filtros de cor</div><div class="filter-grid" id="filter-grid"></div>
-    <div class="divider"></div>
-    <div class="section-title">Ajustes</div>
-    <div class="prop-row"><label>Brilho <span class="prop-val" id="brtVal">0</span></label><input type="range" min="-100" max="100" value="0" oninput="document.getElementById('brtVal').textContent=this.value;applyBrightness(+this.value)"></div>`;
-    const fg2=document.getElementById('filter-grid');
-    filterList.forEach(f=>{
-      const card=document.createElement('div');card.className='filter-card'+(f.key==='none'?' active':'');
-      const mini=document.createElement('canvas');mini.width=80;mini.height=80;
-      const mc=mini.getContext('2d');
-      const tempData=ctx.getImageData(0,0,Math.min(canvasW,80),Math.min(canvasH,80));
-      mc.putImageData(tempData,0,0);
-      if(f.key!=='none')filterPreview(mc,f.key);
-      const nm=document.createElement('div');nm.className='filter-name';nm.textContent=f.n;
-      card.appendChild(mini);card.appendChild(nm);
-      card.onclick=()=>{
-        if(f.key!=='none')applyFilter(f.key);
-        document.querySelectorAll('.filter-card').forEach(x=>x.classList.remove('active'));
-        card.classList.add('active');
-      };
-      fg2.appendChild(card);
-    });
-  } else if(id==='camadas'){
-    body.innerHTML=`<div class="section-title">Ações</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-      <button class="tbtn" onclick="flipH()">↔ Virar H</button>
-      <button class="tbtn" onclick="flipV()">↕ Virar V</button>
-      <button class="tbtn" onclick="rotate90()">↻ Girar</button>
-      <button class="tbtn" onclick="cropCanvas()">✂ Recortar</button>
-    </div>
-    <div class="section-title">Histórico</div>
-    <div style="font-size:11px;color:var(--texts);line-height:2;">${history.map((h,i)=>`<div style="cursor:pointer;padding:4px 8px;border-radius:6px;${i===histIdx?'background:var(--card);color:var(--textm);':''}" onclick="histIdx=${i};restoreHistory()">Estado ${i+1}</div>`).join('')}</div>`;
-  } else if(id==='exportar'){
-    body.innerHTML=`<div class="section-title">Exportar imagem</div>
-    <div class="export-grid">
-      <div class="exp-card" onclick="exportPNG()"><div class="exp-icon">🖼</div><div class="exp-label">PNG</div><div class="exp-sub">Alta qualidade</div></div>
-      <div class="exp-card" onclick="exportJPG()"><div class="exp-icon">📷</div><div class="exp-label">JPG</div><div class="exp-sub">Comprimido</div></div>
-      <div class="exp-card" onclick="exportSVG()"><div class="exp-icon">✦</div><div class="exp-label">SVG</div><div class="exp-sub">Vetorial</div></div>
-      <div class="exp-card" onclick="exportPaletteCss()"><div class="exp-icon">🎨</div><div class="exp-label">Paleta CSS</div><div class="exp-sub">Para web</div></div>
-    </div>
-    <div class="divider"></div>
-    <div class="section-title">Guia de fontes</div>
-    <button class="add-btn" onclick="downloadFontGuide()" style="background:var(--b3);">Baixar guia de fontes</button>
-    <div class="divider"></div>
-    <div class="section-title">Dimensões do canvas</div>
-    <div style="font-size:11px;color:var(--textm);line-height:2;">
-      <div>Tamanho atual: <b>${canvasW} × ${canvasH}px</b></div>
-      <div>Feed quadrado: 1080 × 1080</div>
-      <div>Retrato: 1080 × 1350</div>
-      <div>Story: 1080 × 1920</div>
-    </div>`;
-  }
+/* ═══════════════════════════════════════════
+   EXPORT
+═══════════════════════════════════════════ */
+function exportPNG() {
+  render(); // ensure full res
+  const a = document.createElement('a');
+  a.download = `post-psi-${S.tpl}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
 }
 
-function setColor(h){
-  currentColor=h;
-  const hex=document.getElementById('colorHex');
-  if(hex)hex.textContent=h;
-  const cc=document.getElementById('customColor');
-  if(cc)cc.value=h;
-}
-function setActiveAlign(btn){document.querySelectorAll('.align-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function toggleBold(btn){fontWeight=fontWeight==='400'?'700':'400';btn.classList.toggle('active');}
-function toggleItalic(btn){fontStyle=fontStyle==='normal'?'italic':'normal';btn.classList.toggle('active');}
-function addTextOutline(){
-  const txt=document.getElementById('txt-input')?.value||'Texto';
-  ctx.font=`${fontStyle} ${fontWeight} ${fontSize}px ${currentFont}`;
-  ctx.strokeStyle=currentColor;ctx.lineWidth=3;ctx.textAlign=textAlign;ctx.textBaseline='middle';
-  ctx.strokeText(txt,canvasW/2,canvasH/2);saveHistory();
-}
-function addTextShadow(){
-  const txt=document.getElementById('txt-input')?.value||'Texto';
-  ctx.shadowColor='rgba(0,0,0,0.4)';ctx.shadowBlur=20;ctx.shadowOffsetX=4;ctx.shadowOffsetY=4;
-  ctx.fillStyle=currentColor;ctx.font=`${fontStyle} ${fontWeight} ${fontSize}px ${currentFont}`;
-  ctx.textAlign=textAlign;ctx.textBaseline='middle';ctx.fillText(txt,canvasW/2,canvasH/2);
-  ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;
-  saveHistory();
-}
-function flipH(){const tmp=document.createElement('canvas');tmp.width=canvasW;tmp.height=canvasH;const tc=tmp.getContext('2d');tc.translate(canvasW,0);tc.scale(-1,1);tc.drawImage(canvas,0,0);ctx.clearRect(0,0,canvasW,canvasH);ctx.drawImage(tmp,0,0);saveHistory();}
-function flipV(){const tmp=document.createElement('canvas');tmp.width=canvasW;tmp.height=canvasH;const tc=tmp.getContext('2d');tc.translate(0,canvasH);tc.scale(1,-1);tc.drawImage(canvas,0,0);ctx.clearRect(0,0,canvasW,canvasH);ctx.drawImage(tmp,0,0);saveHistory();}
-function rotate90(){const tmp=document.createElement('canvas');tmp.width=canvasH;tmp.height=canvasW;const tc=tmp.getContext('2d');tc.translate(canvasH/2,canvasW/2);tc.rotate(Math.PI/2);tc.drawImage(canvas,-canvasW/2,-canvasH/2);ctx.clearRect(0,0,canvasW,canvasH);ctx.drawImage(tmp,0,0,canvasW,canvasH);saveHistory();}
-function cropCanvas(){toast('Selecione a área com o mouse (em breve)');}
-function applyBrightness(v){const id=ctx.getImageData(0,0,canvasW,canvasH);const d=id.data;for(let i=0;i<d.length;i+=4){d[i]=Math.min(255,Math.max(0,d[i]+v));d[i+1]=Math.min(255,Math.max(0,d[i+1]+v));d[i+2]=Math.min(255,Math.max(0,d[i+2]+v));}ctx.putImageData(id,0,0);}
-
-function downloadFontGuide(){
-  const txt=`Guia de Fontes — Studio Psi\n${'='.repeat(40)}\n\n${fonts.map(f=>`• ${f.label}\n  Uso ideal: títulos, citações, textos principais\n  CSS: font-family: ${f.value};\n  Google Fonts: https://fonts.google.com/?query=${f.label.split(' ').join('+')}\n`).join('\n')}\n\nPara instalar no Canva:\n1. Baixe a fonte no Google Fonts\n2. No Canva, vá em "Enviar uma fonte"\n3. Selecione o arquivo .ttf ou .otf\n`;
-  const b=new Blob([txt],{type:'text/plain'});
-  const a=document.createElement('a');a.download='guia-fontes-studio-psi.txt';a.href=URL.createObjectURL(b);a.click();
-  toast('Guia de fontes baixado');
-}
-
-initCanvas();
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+buildTemplateList();
+render();
 </script>
 </body>
 </html>
