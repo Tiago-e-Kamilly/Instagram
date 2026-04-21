@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criador de Posts – Psicologia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --d: #2C1508;
+  --m: #5C3120;
+  --b: #8B5E3C;
+  --c: #C4956A;
+  --p: #E8C9A8;
+  --cr: #F5EDE0;
+  --w: #FBF6F0;
+  --text: #1E0E04;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--w);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* TOP BAR */
+.topbar {
+  background: linear-gradient(135deg, var(--d), var(--m));
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 24px rgba(44,21,8,.35);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-icon { font-size: 22px; }
+.topbar h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: var(--cr);
+  font-weight: 600;
+}
+.topbar span {
+  font-size: 12px;
+  color: var(--p);
+  opacity: .75;
+  margin-left: 4px;
+  font-weight: 300;
+}
+
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 280px;
+  height: calc(100vh - 62px);
+}
+
+/* PANEL SIDES */
+.panel {
+  background: white;
+  border-right: 1px solid rgba(196,149,106,.2);
+  overflow-y: auto;
+  padding: 0;
+}
+.panel-right {
+  border-right: none;
+  border-left: 1px solid rgba(196,149,106,.2);
+}
+
+.panel-section {
+  border-bottom: 1px solid rgba(196,149,106,.15);
+  padding: 18px 20px;
+}
+.panel-section:last-child { border-bottom: none; }
+.panel-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--b);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.panel-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(196,149,106,.25);
+}
+
+/* TEMPLATE BUTTONS */
+.templates-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.tpl-btn {
+  border: 2px solid rgba(196,149,106,.3);
+  border-radius: 10px;
+  padding: 10px 8px;
+  cursor: pointer;
+  background: var(--w);
+  transition: all .2s;
+  text-align: center;
+}
+.tpl-btn:hover, .tpl-btn.active {
+  border-color: var(--c);
+  background: var(--cr);
+}
+.tpl-btn .tpl-preview {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.tpl-btn span { font-size: 10px; font-weight: 600; color: var(--m); letter-spacing: .5px; }
+
+/* INPUTS */
+label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--b);
+  margin-bottom: 6px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+input[type=text], textarea, select {
+  width: 100%;
+  border: 1.5px solid rgba(196,149,106,.35);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--w);
+  outline: none;
+  transition: border .2s;
+  resize: none;
+  margin-bottom: 12px;
+}
+input[type=text]:focus, textarea:focus, select:focus {
+  border-color: var(--c);
+  background: white;
+}
+textarea { height: 72px; }
+
+/* COLOR PICKS */
+.color-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.clr {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform .15s, border .15s;
+  flex-shrink: 0;
+}
+.clr:hover { transform: scale(1.15); }
+.clr.active { border-color: var(--d); transform: scale(1.1); }
+
+/* FONT PICKS */
+.font-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.font-opt {
+  border: 2px solid rgba(196,149,106,.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: var(--w);
+  transition: all .2s;
+  font-size: 15px;
+  color: var(--m);
+}
+.font-opt:hover, .font-opt.active {
+  border-color: var(--c);
+  background: var(--cr);
+}
+.font-opt[data-font="playfair"] { font-family: 'Playfair Display', serif; }
+.font-opt[data-font="cormorant"] { font-family: 'Cormorant Garamond', serif; font-size: 17px; }
+.font-opt[data-font="jost"] { font-family: 'Jost', sans-serif; font-weight: 300; letter-spacing: 2px; }
+
+/* TOGGLE DECORATION */
+.deco-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.deco-btn {
+  border: 2px solid rgba(196,149,106,.3);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 18px;
+  background: var(--w);
+  transition: all .18s;
+  line-height: 1;
+}
+.deco-btn:hover, .deco-btn.active {
+  border-color: var(--c);
+  background: var(--cr);
+}
+
+/* RANGE SLIDER */
+input[type=range] {
+  width: 100%;
+  accent-color: var(--b);
+  margin-bottom: 12px;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+/* CANVAS CENTER */
+.canvas-area {
+  background: #e8ddd4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 28px;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(196,149,106,.08) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(44,21,8,.06) 0%, transparent 50%);
+}
+
+/* POST CANVAS */
+#post-canvas {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 80px rgba(44,21,8,.35), 0 4px 20px rgba(44,21,8,.2);
+  border-radius: 4px;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+/* DOWNLOAD BTN */
+.dl-btn {
+  background: linear-gradient(135deg, var(--m), var(--b));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 32px;
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 6px 24px rgba(44,21,8,.25);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dl-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(44,21,8,.3); }
+.dl-btn:active { transform: translateY(0); }
+
+/* FEED PREVIEW */
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-bottom: 12px;
+}
+.feed-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+.feed-cell canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.feed-cell.current-cell {
+  outline: 3px solid var(--c);
+  outline-offset: -3px;
+}
+
+.feed-tip {
+  font-size: 11px;
+  color: var(--b);
+  text-align: center;
+  font-style: italic;
+  opacity: .8;
+}
+
+/* SCROLL */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(196,149,106,.4); border-radius: 4px; }
+
+/* Responsive */
+@media(max-width: 900px) {
+  .layout { grid-template-columns: 1fr; height: auto; }
+  .panel { max-height: 300px; }
+  #post-canvas { width: 320px; height: 320px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-icon">🤎</span>
+  <h1>Criador de Posts <span>— Psicologia & Saúde Mental</span></h1>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT PANEL: Controls -->
+  <div class="panel">
+
+    <div class="panel-section">
+      <div class="panel-title">Template</div>
+      <div class="templates-grid" id="tpl-grid">
+        <div class="tpl-btn active" data-tpl="frase" onclick="setTemplate('frase',this)">
+          <div class="tpl-preview" style="background:linear-gradient(135deg,#5C3120,#C4956A)">🌿</div>
+          <span>FRASE</span>
+        </div>
+        <div class="tpl-btn" data-tpl="dica" onclick="setTemplate('dica',this)">
+          <div class="tpl-preview" style="background:linear-gradient(135deg,#3B1F0E,#8B5E3C)">💡</div>
+          <span>DICA</span>
+        </div>
+        <div class="tpl-btn" data-tpl="titulo" onclick="setTemplate('titulo',this)">
+          <div class="tpl-preview" style="background:linear-gradient(135deg,#C4956A,#E8C9A8)">✨</div>
+          <span>TÍTULO</span>
+        </div>
+        <div class="tpl-btn" data-tpl="minimal" onclick="setTemplate('minimal',this)">
+          <div class="tpl-preview" style="background:#F5EDE0;border:2px solid #C4956A">🤍</div>
+          <span>MINIMAL</span>
+        </div>
+        <div class="tpl-btn" data-tpl="escuro" onclick="setTemplate('escuro',this)">
+          <div class="tpl-preview" style="background:#2C1508">🌙</div>
+          <span>NOTURNO</span>
+        </div>
+        <div class="tpl-btn" data-tpl="carrossel" onclick="setTemplate('carrossel',this)">
+          <div class="tpl-preview" style="background:linear-gradient(135deg,#8B5E3C,#E8C9A8)">📊</div>
+          <span>SLIDE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Conteúdo</div>
+      <label>Título / Frase Principal</label>
+      <textarea id="txt-title" oninput="render()">Você é permitida a sentir tudo isso.</textarea>
+      <label>Subtítulo / Texto de apoio</label>
+      <textarea id="txt-sub" oninput="render()">Acolher suas emoções é o primeiro passo para a cura.</textarea>
+      <label>Sua assinatura</label>
+      <input type="text" id="txt-tag" value="@seunome.psi" oninput="render()">
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Tipografia</div>
+      <div class="font-row">
+        <div class="font-opt active" data-font="playfair" onclick="setFont('playfair',this)">Playfair Display — Elegante</div>
+        <div class="font-opt" data-font="cormorant" onclick="setFont('cormorant',this)">Cormorant Garamond — Refinado</div>
+        <div class="font-opt" data-font="jost" onclick="setFont('jost',this)">JOST LIGHT — MODERNO</div>
+      </div>
+      <label>Tamanho do título</label>
+      <input type="range" id="sz-title" min="18" max="60" value="36" oninput="render()">
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Decoração</div>
+      <div class="deco-row" id="deco-row">
+        <div class="deco-btn active" data-deco="leaf" onclick="toggleDeco('leaf',this)" title="Folha">🌿</div>
+        <div class="deco-btn" data-deco="flor" onclick="toggleDeco('flor',this)" title="Flor">🌸</div>
+        <div class="deco-btn" data-deco="luna" onclick="toggleDeco('luna',this)" title="Lua">🌙</div>
+        <div class="deco-btn" data-deco="star" onclick="toggleDeco('star',this)" title="Estrela">✨</div>
+        <div class="deco-btn" data-deco="none" onclick="toggleDeco('none',this)" title="Nenhum">✕</div>
+      </div>
+      <label>Ornamento de linha</label>
+      <select id="ornament" onchange="render()">
+        <option value="linha">Linha simples</option>
+        <option value="dots">Pontos</option>
+        <option value="wave">Ondas</option>
+        <option value="none">Nenhum</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- CENTER: Canvas -->
+  <div class="canvas-area">
+    <canvas id="post-canvas" width="1080" height="1080" style="width:400px;height:400px;border-radius:4px;"></canvas>
+    <button class="dl-btn" onclick="download()">
+      ⬇ Baixar Imagem (1080×1080)
+    </button>
+  </div>
+
+  <!-- RIGHT PANEL: Feed preview & colors -->
+  <div class="panel panel-right">
+
+    <div class="panel-section">
+      <div class="panel-title">Cor de Fundo</div>
+      <div class="color-row" id="bg-colors">
+        <div class="clr active" style="background:#5C3120" data-color="#5C3120" onclick="setBg('#5C3120',this)"></div>
+        <div class="clr" style="background:#2C1508" data-color="#2C1508" onclick="setBg('#2C1508',this)"></div>
+        <div class="clr" style="background:#8B5E3C" data-color="#8B5E3C" onclick="setBg('#8B5E3C',this)"></div>
+        <div class="clr" style="background:#C4956A" data-color="#C4956A" onclick="setBg('#C4956A',this)"></div>
+        <div class="clr" style="background:#E8C9A8" data-color="#E8C9A8" onclick="setBg('#E8C9A8',this)"></div>
+        <div class="clr" style="background:#F5EDE0" data-color="#F5EDE0" onclick="setBg('#F5EDE0',this)"></div>
+        <div class="clr" style="background:linear-gradient(135deg,#5C3120,#C4956A)" data-color="gradient1" onclick="setBg('gradient1',this)" title="Gradiente 1"></div>
+        <div class="clr" style="background:linear-gradient(135deg,#2C1508,#8B5E3C)" data-color="gradient2" onclick="setBg('gradient2',this)" title="Gradiente 2"></div>
+        <div class="clr" style="background:linear-gradient(135deg,#C4956A,#F5EDE0)" data-color="gradient3" onclick="setBg('gradient3',this)" title="Gradiente suave"></div>
+      </div>
+
+      <label style="margin-top:4px">Cor do Texto</label>
+      <div class="color-row" id="txt-colors">
+        <div class="clr active" style="background:#FBF6F0" data-color="#FBF6F0" onclick="setTxtColor('#FBF6F0',this)"></div>
+        <div class="clr" style="background:#E8C9A8" data-color="#E8C9A8" onclick="setTxtColor('#E8C9A8',this)"></div>
+        <div class="clr" style="background:#2C1508" data-color="#2C1508" onclick="setTxtColor('#2C1508',this)"></div>
+        <div class="clr" style="background:#5C3120" data-color="#5C3120" onclick="setTxtColor('#5C3120',this)"></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Prévia do Feed</div>
+      <div class="feed-grid" id="feed-grid"></div>
+      <p class="feed-tip">Clique em um slot para<br>editar aquele post</p>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Tamanho</div>
+      <select id="size-sel" onchange="render()">
+        <option value="square">Quadrado 1:1 (Feed)</option>
+        <option value="story">Story 9:16</option>
+        <option value="landscape">Horizontal 4:5</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('post-canvas');
+const ctx = canvas.getContext('2d');
+
+// State
+let state = {
+  template: 'frase',
+  bg: '#5C3120',
+  txtColor: '#FBF6F0',
+  font: 'playfair',
+  deco: 'leaf',
+  ornament: 'linha',
+};
+
+// Feed slots: store snapshots
+let feedSlots = Array(9).fill(null);
+let currentSlot = 0;
+
+// ---- SETTERS ----
+function setTemplate(t, el) {
+  state.template = t;
+  document.querySelectorAll('.tpl-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+
+  // Auto-apply aesthetics per template
+  const presets = {
+    frase:    { bg:'gradient1', txtColor:'#FBF6F0' },
+    dica:     { bg:'gradient2', txtColor:'#E8C9A8' },
+    titulo:   { bg:'gradient3', txtColor:'#2C1508' },
+    minimal:  { bg:'#F5EDE0',   txtColor:'#2C1508' },
+    escuro:   { bg:'#2C1508',   txtColor:'#E8C9A8' },
+    carrossel:{ bg:'gradient2', txtColor:'#FBF6F0' },
+  };
+  const p = presets[t] || {};
+  if(p.bg) { state.bg = p.bg; highlightColor('bg-colors', p.bg); }
+  if(p.txtColor) { state.txtColor = p.txtColor; highlightColor('txt-colors', p.txtColor); }
+  render();
+}
+
+function setBg(c, el) {
+  state.bg = c;
+  highlightColor('bg-colors', c);
+  render();
+}
+function setTxtColor(c, el) {
+  state.txtColor = c;
+  highlightColor('txt-colors', c);
+  render();
+}
+function setFont(f, el) {
+  state.font = f;
+  document.querySelectorAll('.font-opt').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+function toggleDeco(d, el) {
+  state.deco = d;
+  document.querySelectorAll('.deco-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+function highlightColor(rowId, val) {
+  document.querySelectorAll(`#${rowId} .clr`).forEach(c=>{
+    c.classList.toggle('active', c.dataset.color === val);
+  });
+}
+
+// ---- RENDER ----
+function getBgGradient(ctx, key) {
+  const map = {
+    gradient1: ['#5C3120','#C4956A'],
+    gradient2: ['#2C1508','#8B5E3C'],
+    gradient3: ['#C4956A','#F5EDE0'],
+  };
+  if(map[key]) {
+    const g = ctx.createLinearGradient(0,0,1080,1080);
+    g.addColorStop(0, map[key][0]);
+    g.addColorStop(1, map[key][1]);
+    return g;
+  }
+  return key;
+}
+
+function fontFamilyStr(f) {
+  if(f==='playfair') return "'Playfair Display', serif";
+  if(f==='cormorant') return "'Cormorant Garamond', serif";
+  return "'Jost', sans-serif";
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  let lines = [];
+  for(let w of words) {
+    const test = line + (line?'  ':'')+w;
+    if(ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = w;
+    } else line = test;
+  }
+  if(line) lines.push(line);
+  const totalH = lines.length * lineHeight;
+  let sy = y - totalH/2;
+  lines.forEach(l => {
+    ctx.fillText(l, x, sy);
+    sy += lineHeight;
+  });
+  return lines.length * lineHeight;
+}
+
+function drawOrn(ctx, cx, y, type, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.globalAlpha = 0.45;
+  ctx.lineWidth = 2;
+  if(type==='linha') {
+    ctx.beginPath();
+    ctx.moveTo(cx-120,y); ctx.lineTo(cx+120,y);
+    ctx.stroke();
+  } else if(type==='dots') {
+    for(let i=-3;i<=3;i++) {
+      ctx.beginPath();
+      ctx.arc(cx+i*30, y, 3, 0, Math.PI*2);
+      ctx.fillStyle=color; ctx.fill();
+    }
+  } else if(type==='wave') {
+    ctx.beginPath();
+    for(let x=-120;x<=120;x+=4) {
+      const wy = Math.sin(x/12)*6;
+      x===-120 ? ctx.moveTo(cx+x,y+wy) : ctx.lineTo(cx+x,y+wy);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function render() {
+  const W = 1080, H = 1080;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0,0,W,H);
+
+  // BG
+  ctx.fillStyle = getBgGradient(ctx, state.bg);
+  ctx.fillRect(0,0,W,H);
+
+  // Texture overlay
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  for(let i=0;i<W;i+=3) for(let j=0;j<H;j+=3)
+    if(Math.random()>0.6) { ctx.fillStyle='#fff'; ctx.fillRect(i,j,1,1); }
+  ctx.restore();
+
+  // Circle deco
+  const tpl = state.template;
+  if(tpl!=='minimal') {
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(W*0.85, H*0.15, 340, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 0.05;
+    ctx.beginPath();
+    ctx.arc(W*0.15, H*0.85, 260, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Border frame
+  ctx.save();
+  ctx.strokeStyle = state.txtColor;
+  ctx.globalAlpha = 0.18;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(36, 36, W-72, H-72);
+  ctx.globalAlpha = 0.08;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(52, 52, W-104, H-104);
+  ctx.restore();
+
+  const cx = W/2;
+  const tc = state.txtColor;
+  const ff = fontFamilyStr(state.font);
+  const titleSz = parseInt(document.getElementById('sz-title').value);
+  const title = document.getElementById('txt-title').value;
+  const sub = document.getElementById('txt-sub').value;
+  const tag = document.getElementById('txt-tag').value;
+  const orn = document.getElementById('ornament').value;
+
+  // ---- TEMPLATE LAYOUTS ----
+  if(tpl === 'frase') {
+    // Centered quote layout
+    ctx.save();
+    ctx.fillStyle = tc;
+    ctx.globalAlpha = 0.35;
+    ctx.font = `italic 200px ${ff}`;
+    ctx.textAlign = 'center';
+    ctx.fillText('"', cx - 280, 380);
+    ctx.restore();
+
+    ctx.fillStyle = tc;
+    ctx.font = `italic ${titleSz+8}px ${ff}`;
+    ctx.textAlign = 'center';
+    ctx.shadowColor = 'rgba(0,0,0,0.2)';
+    ctx.shadowBlur = 20;
+    const th = wrapText(ctx, title, cx, H/2 - 60, 820, titleSz+24);
+    ctx.shadowBlur = 0;
+
+    drawOrn(ctx, cx, H/2 + th/2 - 30, orn, tc);
+
+    ctx.fillStyle = tc;
+    ctx.globalAlpha = 0.75;
+    ctx.font = `300 ${titleSz*0.45}px ${ff}`;
+    wrapText(ctx, sub, cx, H/2 + th/2 + 40, 720, titleSz*0.6);
+
+  } else if(tpl === 'dica') {
+    // Left accent bar + content
+    ctx.save();
+    ctx.fillStyle = tc;
+    ctx.globalAlpha = 0.3;
+    ctx.fillRect(80, 200, 5, 680);
+    ctx.restore();
+
+    ctx.fillStyle = tc;
+    ctx.font = `600 28px 'Jost', sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 0.6;
+    ctx.fillText('DICA DE SAÚDE MENTAL', 110, 240);
+
+    drawOrn(ctx, 450, 270, orn, tc);
+
+    ctx.globalAlpha = 1;
+    ctx.font = `italic ${titleSz+4}px ${ff}`;
+    ctx.textAlign = 'left';
+    ctx.shadowColor = 'rgba(0,0,0,.18)';
+    ctx.shadowBlur = 16;
+    wrapText(ctx, title, 110, H/2 - 40, 800, titleSz+24);
+    ctx.shadowBlur = 0;
+
+    ctx.globalAlpha = 0.75;
+    ctx.font = `300 ${titleSz*0.44}px 'Jost', sans-serif`;
+    wrapText(ctx, sub, 110, H/2 + 160, 800, titleSz*0.58);
+
+  } else if(tpl === 'titulo') {
+    // Bold center with bottom panel
+    ctx.save();
+    const grad = ctx.createLinearGradient(0, H*0.7, 0, H);
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, 'rgba(44,21,8,0.45)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, H*0.7, W, H*0.3);
+    ctx.restore();
+
+    ctx.fillStyle = tc;
+    ctx.font = `700 ${titleSz+14}px ${ff}`;
+    ctx.textAlign = 'center';
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 24;
+    wrapText(ctx, title, cx, H/2 - 20, 860, titleSz+32);
+    ctx.shadowBlur = 0;
+
+    drawOrn(ctx, cx, H/2 + 120, orn, tc);
+
+    ctx.globalAlpha = 0.8;
+    ctx.font = `300 ${titleSz*0.42}px 'Jost', sans-serif`;
+    wrapText(ctx, sub, cx, H/2 + 200, 720, titleSz*0.55);
+
+  } else if(tpl === 'minimal') {
+    // Clean minimal, dark text on light bg
+    ctx.strokeStyle = '#C4956A';
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(60, 60, W-120, H-120);
+
+    ctx.fillStyle = '#8B5E3C';
+    ctx.font = `600 22px 'Jost', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '4px';
+    ctx.fillText('✦  PSICOLOGIA  ✦', cx, 140);
+
+    ctx.fillStyle = '#2C1508';
+    ctx.font = `italic ${titleSz+4}px ${ff}`;
+    ctx.shadowColor = 'rgba(44,21,8,.08)';
+    ctx.shadowBlur = 12;
+    wrapText(ctx, title, cx, H/2 - 40, 820, titleSz+26);
+    ctx.shadowBlur = 0;
+
+    drawOrn(ctx, cx, H/2 + 100, orn, '#C4956A');
+
+    ctx.fillStyle = '#8B5E3C';
+    ctx.font = `300 ${titleSz*0.4}px 'Jost', sans-serif`;
+    wrapText(ctx, sub, cx, H/2 + 190, 720, titleSz*0.52);
+
+  } else if(tpl === 'escuro') {
+    // Dark night moody
+    ctx.save();
+    ctx.fillStyle = '#C4956A';
+    ctx.globalAlpha = 0.12;
+    for(let i=0;i<18;i++) {
+      ctx.beginPath();
+      ctx.arc(Math.random()*W, Math.random()*H, Math.random()*2+1, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.fillStyle = '#E8C9A8';
+    ctx.font = `300 24px 'Jost', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.globalAlpha = 0.5;
+    ctx.fillText('✦  ✦  ✦', cx, 160);
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = '#E8C9A8';
+    ctx.font = `italic ${titleSz+6}px ${ff}`;
+    ctx.shadowColor = '#C4956A';
+    ctx.shadowBlur = 30;
+    wrapText(ctx, title, cx, H/2 - 30, 820, titleSz+28);
+    ctx.shadowBlur = 0;
+
+    drawOrn(ctx, cx, H/2 + 110, orn, '#C4956A');
+
+    ctx.fillStyle = '#C4956A';
+    ctx.font = `300 ${titleSz*0.42}px 'Jost', sans-serif`;
+    ctx.globalAlpha = 0.85;
+    wrapText(ctx, sub, cx, H/2 + 200, 720, titleSz*0.56);
+
+  } else if(tpl === 'carrossel') {
+    // Slide with number indicator
+    ctx.fillStyle = tc;
+    ctx.globalAlpha = 0.2;
+    ctx.font = `700 220px 'Playfair Display', serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText('01', W-60, H/2 + 100);
+
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = tc;
+    ctx.font = `600 26px 'Jost', sans-serif`;
+    ctx.globalAlpha = 0.55;
+    ctx.fillText('SLIDE', 90, 200);
+    drawOrn(ctx, 220, 220, orn, tc);
+
+    ctx.globalAlpha = 1;
+    ctx.font = `italic ${titleSz+6}px ${ff}`;
+    ctx.shadowColor = 'rgba(0,0,0,.2)';
+    ctx.shadowBlur = 16;
+    wrapText(ctx, title, 90, H/2 - 20, 820, titleSz+26);
+    ctx.shadowBlur = 0;
+
+    ctx.globalAlpha = 0.8;
+    ctx.font = `300 ${titleSz*0.44}px 'Jost', sans-serif`;
+    wrapText(ctx, sub, 90, H/2 + 180, 820, titleSz*0.58);
+  }
+
+  // DECO EMOJI
+  if(state.deco !== 'none') {
+    const decoMap = { leaf:'🌿', flor:'🌸', luna:'🌙', star:'✨' };
+    const em = decoMap[state.deco];
+    if(em) {
+      ctx.save();
+      ctx.font = '72px serif';
+      ctx.textAlign = 'right';
+      ctx.globalAlpha = 0.75;
+      ctx.fillText(em, W-80, H-100);
+      ctx.restore();
+    }
+  }
+
+  // TAG (assinatura)
+  ctx.save();
+  ctx.fillStyle = tc;
+  ctx.globalAlpha = 0.55;
+  ctx.font = `500 26px 'Jost', sans-serif`;
+  ctx.textAlign = tpl==='dica'||tpl==='carrossel' ? 'left' : 'center';
+  const tagX = (tpl==='dica'||tpl==='carrossel') ? 90 : cx;
+  ctx.fillText(tag, tagX, H - 72);
+  ctx.restore();
+
+  // Update feed slot
+  feedSlots[currentSlot] = canvas.toDataURL();
+  renderFeed();
+}
+
+// ---- FEED ----
+function renderFeed() {
+  const grid = document.getElementById('feed-grid');
+  grid.innerHTML = '';
+  for(let i=0;i<9;i++) {
+    const cell = document.createElement('div');
+    cell.className = 'feed-cell' + (i===currentSlot?' current-cell':'');
+    cell.title = `Post ${i+1}`;
+    cell.onclick = ()=>{ currentSlot=i; renderFeed(); };
+    if(feedSlots[i]) {
+      const img = document.createElement('img');
+      img.src = feedSlots[i];
+      img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
+      cell.appendChild(img);
+    } else {
+      cell.style.cssText='background:#e8ddd4;display:flex;align-items:center;justify-content:center;font-size:20px;color:#C4956A;';
+      cell.innerHTML = '<span style="opacity:.4">+</span>';
+    }
+    grid.appendChild(cell);
+  }
+}
+
+// ---- DOWNLOAD ----
+function download() {
+  const a = document.createElement('a');
+  a.download = 'post-psicologia.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+// ---- INIT ----
+document.getElementById('ornament').addEventListener('change', render);
+render();
+renderFeed();
+</script>
+</body>
+</html>
